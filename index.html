@@ -363,36 +363,53 @@
       reader.readAsDataURL(file);
     }
 
-    // Google Apps Script Call Bridge (Support google.script.run & HTTP POST Fallback)
-    function gasCall(action, payload) {
-      return new Promise((resolve) => {
-        if (typeof google !== 'undefined' && google.script && google.script.run) {
-          google.script.run
-            .withSuccessHandler((res) => {
-              if (typeof res === 'string') {
-                try { resolve(JSON.parse(res)); } catch(e) { resolve(res); }
-              } else {
-                resolve(res || { ok: true });
-              }
-            })
-            .withFailureHandler((err) => {
-              console.error('GAS Error:', err);
-              resolve({ ok: false, message: String(err) });
-            })
-            .handleAction(action, payload);
-        } else {
-          // Local/Web Fallback
-          fetch('/api/handleRequest', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action, payload: payload !== undefined ? JSON.stringify(payload) : '' }),
-          })
-            .then((res) => res.json())
-            .then((data) => resolve(data))
-            .catch((err) => resolve({ ok: false, message: err.message }));
-        }
+    const API_URL = "https://script.google.com/macros/s/AKfycbxh1uOsPRj35674362d0wu4a2UOtbGh1ZBtZTmch_PdN7jg-BkdeOsseQQmV3XkdMIh/exec";
+
+function gasCall(action, payload) {
+  return new Promise((resolve) => {
+
+    // Jika dijalankan di Google Apps Script
+    if (typeof google !== "undefined" &&
+        google.script &&
+        google.script.run) {
+
+      google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(err => {
+          resolve({
+            ok: false,
+            message: String(err)
+          });
+        })
+        .handleAction(action, payload);
+
+    } else {
+
+      // Jika dijalankan di GitHub Pages
+      fetch(API_URL, {
+        method: "POST",
+        redirect: "follow",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({
+          action: action,
+          payload: payload
+        })
+      })
+      .then(res => res.json())
+      .then(resolve)
+      .catch(err => {
+        resolve({
+          ok: false,
+          message: err.message
+        });
       });
+
     }
+
+  });
+}
 
     const INDO_MONTHS = [
       'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
