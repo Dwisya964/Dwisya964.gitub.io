@@ -1,0 +1,3089 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- ===== DIUBAH: Judul tab browser ===== -->
+  <title>Dwisyafitriproject</title>
+
+  <!-- ===== DITAMBAH: PWA / Pintasan Layar Beranda (Home Screen Shortcut) ===== -->
+  <meta name="application-name" content="Dwisyafitriproject">
+  <meta name="apple-mobile-web-app-title" content="Dwisyafitriproject">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#365314">
+  <meta name="description" content="Dwisyafitriproject — portofolio, store, stockopname">
+  <meta name="msapplication-TileColor" content="#365314">
+  <!-- Ikon untuk layar beranda iPhone/iPad (tas belanja biru + tulisan STORE) -->
+  <link rel="apple-touch-icon" sizes="512x512"
+    href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzM2NTMxNCIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjIzMiIgcj0iMTI4IiBmaWxsPSIjNjVBMzBEIi8+PHBhdGggZD0iTTE2MCAyMzJoMTkyTTI1NiAxMzZ2MTkyIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjx0ZXh0IHg9IjI1NiIgeT0iNDMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNzQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmYiPlI8L3RleHQ+PC9zdmc+">
+  <!-- Web App Manifest diinjeksikan via JS karena GAS tidak bisa serve file terpisah -->
+  <script>
+    (function () {
+      var iconB64 = "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzM2NTMxNCIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjIzMiIgcj0iMTI4IiBmaWxsPSIjNjVBMzBEIi8+PHBhdGggZD0iTTE2MCAyMzJoMTkyTTI1NiAxMzZ2MTkyIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjx0ZXh0IHg9IjI1NiIgeT0iNDMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNzQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmYiPlI8L3RleHQ+PC9zdmc+";
+      var manifest = {
+        name: "Dwisyafitriproject",
+        short_name: "Dwisyafitriproject",
+        description: "PRODUK, PESANAN, ARUS KAS",
+        start_url: window.location.href,
+        display: "standalone",
+        orientation: "portrait",
+        background_color: "#365314",
+        theme_color: "#365314",
+        icons: [
+          { src: iconB64, sizes: "192x192", type: "image/svg+xml" },
+          { src: iconB64, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+        ]
+      };
+      try {
+        var blob = new Blob([JSON.stringify(manifest)], { type: 'application/manifest+json' });
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement('link');
+        link.rel = 'manifest';
+        link.href = url;
+        document.head.appendChild(link);
+      } catch (e) { /* sandbox fallback */ }
+    })();
+  </script>
+  <!-- ===== SELESAI: PWA Tags ===== -->
+
+  <!-- Google Fonts: Space Grotesk -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700;800&family=Karla:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React 18 & ReactDOM 18 UMD -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel Standalone untuk JSX Runtime di Browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- PDF generator untuk struk thermal 58 mm -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; background-color: #EFF6FF; color: #1E3A5F; margin:0;padding:0;-webkit-font-smoothing:antialiased; }
+    h1, h2, h3, .font-extrabold, .font-black { font-family: 'Poppins', sans-serif !important; }
+    .neo-border { border: 2px solid #1D4ED8 !important; border-radius: 8px !important; }
+    .neo-shadow { box-shadow: 4px 4px 0 #1D4ED8 !important; }
+    .neo-shadow-lg { box-shadow: 6px 6px 0 #1D4ED8 !important; }
+    .neo-shadow-sm { box-shadow: 2px 2px 0 #1D4ED8 !important; }
+    .neo-btn:active { transform: translate(2px,2px); box-shadow: 2px 2px 0 #1D4ED8 !important; }
+    .bg-\[\#FFDD00\] { background-color: #2563EB !important; color: #fff !important; }
+    .hover\:bg-yellow-400:hover { background-color: #1D4ED8 !important; color: #fff !important; }
+    .text-\[\#FFDD00\] { color: #2563EB !important; }
+    .bg-\[\#FFFBCC\], .bg-yellow-50, .bg-yellow-100 { background-color: #DBEAFE !important; }
+    .hover\:bg-yellow-50:hover { background-color: #EFF6FF !important; }
+    .bg-\[\#F5F5F5\] { background-color: #EFF6FF !important; }
+    .bg-white { background-color: #FFFFFF !important; }
+    .bg-gray-100 { background-color: #DBEAFE !important; }
+    .bg-gray-50 { background-color: #EFF6FF !important; }
+    .border-black { border-color: #1D4ED8 !important; }
+    .border-gray-200 { border-color: #BFDBFE !important; }
+    .border-gray-300 { border-color: #93C5FD !important; }
+    .divide-gray-200 > * + * { border-color: #BFDBFE !important; }
+    .hover\:bg-gray-100:hover { background-color: #DBEAFE !important; }
+    .hover\:bg-gray-200:hover { background-color: #BFDBFE !important; }
+    .hover\:bg-green-50:hover { background-color: #ECFDF5 !important; }
+    .hover\:bg-red-50:hover { background-color: #FEF2F2 !important; }
+    input, select, textarea { background-color: #FFFFFF !important; border-color: #1D4ED8 !important; }
+    header { border-color: #1D4ED8 !important; background-color: #FFFFFF !important; }
+    footer { background-color: #1E3A5F !important; }
+    footer p, footer .text-gray-500 { color: #93C5FD !important; }
+    .bg-black { background-color: #1E3A5F !important; }
+    .bg-\[\#00E5FF\] { background-color: #0EA5E9 !important; }
+    .bg-\[\#00E5A0\] { background-color: #10B981 !important; }
+    .bg-\[\#25D366\] { background-color: #25D366 !important; }
+    @media print {
+      @page { size: 58mm auto; margin: 0; }
+      body * { visibility: hidden; }
+      #print-receipt-container, #print-receipt-container * { visibility: visible; }
+      #print-receipt-container { position: absolute; left: 0; top: 0; width: 58mm; max-width: 58mm; padding: 3mm; box-sizing: border-box; font-size: 10px; overflow: visible; }
+    }
+    .receipt-paper { width: 58mm; max-width: 100%; margin: 0 auto; padding: 4mm; box-sizing: border-box; background: #fff; color: #000; }
+    
+
+    /* Visual system: Dwisyafitriproject */
+    .variant-10 {
+      background-color: #F7FEE7 !important;
+      color: #1A2E05 !important;
+      background-image: conic-gradient(from 45deg at 12px 12px, rgba(54,83,20,.1) 0 25%, transparent 0 50%, rgba(54,83,20,.1) 0 75%, transparent 0);
+      background-size: 24px 24px;
+      font-family: 'Karla', sans-serif !important;
+    }
+    .variant-10::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .22;
+      z-index: -1;
+      background-image: conic-gradient(from 45deg at 12px 12px, rgba(54,83,20,.1) 0 25%, transparent 0 50%, rgba(54,83,20,.1) 0 75%, transparent 0);
+      background-size: 24px 24px;
+    }
+    .variant-10 h1, .variant-10 h2, .variant-10 h3, .variant-10 .font-extrabold, .variant-10 .font-black {
+      font-family: 'Lora', sans-serif !important;
+      letter-spacing: -.02em;
+    }
+    .variant-10 .neo-border {
+      border-color: #365314 !important;
+      border-radius: 14px !important;
+    }
+    .variant-10 .neo-shadow { box-shadow: 5px 5px 0 #365314 !important; }
+    .variant-10 .neo-shadow-lg { box-shadow: 8px 8px 0 #365314 !important; }
+    .variant-10 .neo-shadow-sm { box-shadow: 3px 3px 0 #365314 !important; }
+    .variant-10 .neo-btn:active { box-shadow: 2px 2px 0 #365314 !important; }
+    .variant-10 [class*="bg-[#FFDD00]"] { background-color: #65A30D !important; color: #1A2E05 !important; }
+    .variant-10 [class*="text-[#FFDD00]"] { color: #65A30D !important; }
+    .variant-10 [class*="bg-[#00E5FF]"] { background-color: #D9F99D !important; color: #1A2E05 !important; }
+    .variant-10 [class*="bg-[#00E5A0]"] { background-color: #65A30D !important; color: #1A2E05 !important; }
+    .variant-10 [class*="bg-[#25D366]"] { background-color: #25D366 !important; color: #052E16 !important; }
+    .variant-10 .bg-black { background-color: #1A2E05 !important; }
+    .variant-10 .bg-white { background-color: #FAFAF0 !important; }
+    .variant-10 .bg-gray-100, .variant-10 .bg-gray-50 { background-color: #F7FEE7 !important; }
+    .variant-10 .border-black, .variant-10 input, .variant-10 select, .variant-10 textarea { border-color: #365314 !important; }
+    .variant-10 .border-gray-200, .variant-10 .border-gray-300 { border-color: #D9F99D !important; }
+    .variant-10 .text-gray-500, .variant-10 .text-gray-600, .variant-10 .text-gray-700 { color: #4D7C0F !important; }
+    .variant-10 header { background-color: #FAFAF0 !important; border-color: #365314 !important; }
+    .variant-10 footer { background-color: #1A2E05 !important; border-color: #365314 !important; }
+    .variant-10 footer p, .variant-10 footer .text-gray-500 { color: #D9F99D !important; }
+    .variant-10 .transition-transform {
+      transition-duration: 2300ms !important;
+      transition-timing-function: cubic-bezier(.175,.885,.32,1.275) !important;
+    }
+    .variant-10 .neo-border:hover { filter: saturate(1.08); }
+    
+  </style>
+</head>
+<body class="variant-10 bg-[#F5F5F5] text-black min-h-screen flex flex-col">
+  
+  <div id="root">
+    <div class="flex items-center justify-center min-h-screen font-bold text-lg">
+      Memuat Dwisyafitriproject...
+    </div>
+  </div>
+
+  <!-- BINDING UTAMA GOOGLE APPS SCRIPT & REACT FULL CLIENT APPLICATION -->
+  <script type="text/babel">
+    const { useState, useEffect, useMemo, useRef } = React;
+
+    // --- UTILITIES & API HELPER ---
+    function rp(n) {
+      const num = Number(n || 0);
+      return 'Rp ' + num.toLocaleString('id-ID');
+    }
+
+    function fmtDate(iso, withTime = false) {
+      if (!iso) return '-';
+      try {
+        const d = new Date(iso);
+        if (isNaN(d.getTime())) return iso;
+        const pad = (v) => (v < 10 ? '0' + v : String(v));
+        let base = `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()}`;
+        if (withTime) {
+          base += ` ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+        }
+        return base;
+      } catch {
+        return iso;
+      }
+    }
+
+    function cleanWaInput(val) {
+      let v = String(val || '').replace(/\D/g, '');
+      if (v.startsWith('0')) {
+        v = '62' + v.slice(1);
+      }
+      return v;
+    }
+
+    function createReceiptPdf(sale) {
+      const JsPDF = window.jspdf && window.jspdf.jsPDF;
+      if (!JsPDF) {
+        throw new Error('Generator PDF belum siap. Silakan coba lagi.');
+      }
+
+      const paperWidth = 58;
+      const margin = 4;
+      const contentWidth = paperWidth - margin * 2;
+      const measureDoc = new JsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: [paperWidth, 200],
+        compress: true,
+      });
+      const productText = String(sale.PRODUK || 'Tidak ada detail produk');
+      const productLines = measureDoc.splitTextToSize(productText, contentWidth);
+      const buyerLines = measureDoc.splitTextToSize(
+        `Pembeli: ${String(sale.NAMA_PEMBELI || 'Pelanggan Umum')}`,
+        contentWidth
+      );
+      const calculatedHeight = Math.max(
+        110,
+        54 + (productLines.length + buyerLines.length) * 4.2
+      );
+
+      const doc = new JsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: [paperWidth, calculatedHeight],
+        compress: true,
+      });
+      let y = 8;
+      const lineHeight = 4.2;
+
+      const center = (text, size, bold = false) => {
+        doc.setFont('helvetica', bold ? 'bold' : 'normal');
+        doc.setFontSize(size);
+        doc.text(String(text), paperWidth / 2, y, { align: 'center' });
+        y += size <= 9 ? 4 : 5;
+      };
+      const rule = () => {
+        doc.setDrawColor(0);
+        doc.line(margin, y, paperWidth - margin, y);
+        y += 4;
+      };
+      const wrapped = (text, size = 9, bold = false, align = 'left') => {
+        doc.setFont('helvetica', bold ? 'bold' : 'normal');
+        doc.setFontSize(size);
+        const lines = doc.splitTextToSize(String(text), contentWidth);
+        doc.text(lines, align === 'center' ? paperWidth / 2 : margin, y, {
+          align,
+          lineHeightFactor: 1.15,
+        });
+        y += Math.max(1, lines.length) * lineHeight;
+      };
+      const row = (label, value, bold = false) => {
+        doc.setFont('helvetica', bold ? 'bold' : 'normal');
+        doc.setFontSize(8.5);
+        doc.text(String(label), margin, y);
+        doc.text(String(value), paperWidth - margin, y, { align: 'right' });
+        y += lineHeight;
+      };
+
+      center('Dwisyafitriproject', 14, true);
+      center('STRUK PEMBAYARAN KASIR', 8, true);
+      y += 1;
+      rule();
+      row('No Trx:', sale.NO_TRANSAKSI || sale.ID || '-');
+      row('Tanggal:', fmtDate(sale.TANGGAL, true));
+      wrapped(`Pembeli: ${sale.NAMA_PEMBELI || 'Pelanggan Umum'}`, 8.5, true);
+      row('Metode:', String(sale.METODE || '-').toUpperCase(), true);
+      y += 1;
+      rule();
+      wrapped('DETAIL PESANAN', 8, true);
+      wrapped(productText, 9, true);
+      y += 1;
+      rule();
+      row('Total Tagihan:', rp(sale.HARGA), true);
+      row('Bayar:', rp(sale.BAYAR));
+      row('Kembalian:', rp(sale.KEMBALIAN), true);
+      y += 4;
+      wrapped('Terima kasih telah berbelanja di Dwisyafitriproject!', 8, true, 'center');
+
+      const filename = `struk-${sale.NO_TRANSAKSI || sale.ID || 'transaksi'}.pdf`
+        .replace(/[^a-zA-Z0-9._-]/g, '-');
+      return {
+        blob: doc.output('blob'),
+        dataUri: doc.output('datauristring'),
+        filename,
+      };
+    }
+
+    function downloadReceiptPdf(pdf) {
+      const url = URL.createObjectURL(pdf.blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = pdf.filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
+
+    function maskWa(wa) {
+      if (!wa || wa.length < 6) return wa;
+      return wa.slice(0, 4) + '•••' + wa.slice(-3);
+    }
+
+    function convertDriveLink(url) {
+      if (!url) return '';
+      const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://lh3.googleusercontent.com/d/${match[1]}`;
+      }
+      const matchParam = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (matchParam && matchParam[1]) {
+        return `https://lh3.googleusercontent.com/d/${matchParam[1]}`;
+      }
+      return url;
+    }
+
+    function compressImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const MAX = 400;
+          let w = img.width;
+          let h = img.height;
+          if (w > h) {
+            if (w > MAX) {
+              h = Math.round((h * MAX) / w);
+              w = MAX;
+            }
+          } else {
+            if (h > MAX) {
+              w = Math.round((w * MAX) / h);
+              h = MAX;
+            }
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, w, h);
+            callback(canvas.toDataURL('image/jpeg', 0.7));
+          } else {
+            callback(e.target.result);
+          }
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // Google Apps Script Call Bridge (Support google.script.run & HTTP POST Fallback)
+    function gasCall(action, payload) {
+      return new Promise((resolve) => {
+        if (typeof google !== 'undefined' && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler((res) => {
+              if (typeof res === 'string') {
+                try { resolve(JSON.parse(res)); } catch(e) { resolve(res); }
+              } else {
+                resolve(res || { ok: true });
+              }
+            })
+            .withFailureHandler((err) => {
+              console.error('GAS Error:', err);
+              resolve({ ok: false, message: String(err) });
+            })
+            .handleAction(action, payload);
+        } else {
+          // Local/Web Fallback
+          fetch('/api/handleRequest', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action, payload: payload !== undefined ? JSON.stringify(payload) : '' }),
+          })
+            .then((res) => res.json())
+            .then((data) => resolve(data))
+            .catch((err) => resolve({ ok: false, message: err.message }));
+        }
+      });
+    }
+
+    const INDO_MONTHS = [
+      'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+      'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+    ];
+
+    function getMonthYearStr(dateStr) {
+      if (!dateStr) return '';
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return '';
+      return `${INDO_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+    }
+
+    // --- COMPONENTS ---
+
+    // Toast
+    function Toast({ toast }) {
+      if (!toast) return null;
+      return (
+        <div className={`fixed bottom-5 right-5 z-50 neo-border neo-shadow-lg px-4 py-3 font-bold text-sm flex items-center gap-2 ${
+          toast.type === 'error' ? 'bg-red-400 text-black' : 'bg-[#00E5FF] text-black'
+        }`}>
+          <span>{toast.type === 'error' ? '❌' : '✅'}</span>
+          <span>{toast.message}</span>
+        </div>
+      );
+    }
+
+    // ConfirmModal
+    function ConfirmModal({ isOpen, title, message, onConfirm, onCancel }) {
+      if (!isOpen) return null;
+      return (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white neo-border neo-shadow-lg p-6 max-w-sm w-full">
+            <h3 className="font-extrabold text-lg mb-2">{title || 'Konfirmasi'}</h3>
+            <p className="text-sm font-medium text-gray-700 mb-6">{message}</p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={onCancel}
+                className="neo-border px-4 py-2 text-xs font-extrabold bg-gray-100 hover:bg-gray-200"
+              >
+                Batal
+              </button>
+              <button
+                onClick={onConfirm}
+                className="neo-border px-4 py-2 text-xs font-extrabold bg-red-500 text-white hover:bg-red-600"
+              >
+                Hapus
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Header
+    function Header({ currentPage, setCurrentPage, isAdminLoggedIn, onOpenLogin, onLogout }) {
+      return (
+        <header className="bg-white neo-border border-t-0 border-x-0 sticky top-0 z-40">
+          <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+            <div
+              onClick={() => setCurrentPage('katalog')}
+              className="cursor-pointer flex items-center gap-2"
+            >
+              <div className="w-9 h-9 bg-[#FFDD00] neo-border neo-shadow-sm flex items-center justify-center font-extrabold text-lg">
+                ⌁
+              </div>
+              <div>
+                <h1 className="font-extrabold text-xl leading-none tracking-tight">Dwisyafitriproject</h1>
+                <p className="text-[10px] font-bold text-gray-500 tracking-wider">PRODUK, PESANAN, ARUS KAS</p>
+              </div>
+            </div>
+
+            <nav className="flex items-center gap-2">
+              <button
+                onClick={() => setCurrentPage('katalog')}
+                className={`neo-border px-3 py-1.5 text-xs font-extrabold transition-all ${
+                  currentPage === 'katalog' ? 'bg-[#FFDD00] neo-shadow-sm' : 'bg-white hover:bg-gray-100'
+                }`}
+              >
+                Katalog Produk
+              </button>
+              <button
+                onClick={() => setCurrentPage('ulasan')}
+                className={`neo-border px-3 py-1.5 text-xs font-extrabold transition-all ${
+                  currentPage === 'ulasan' ? 'bg-[#FFDD00] neo-shadow-sm' : 'bg-white hover:bg-gray-100'
+                }`}
+              >
+                Ulasan Pelanggan
+              </button>
+
+              {isAdminLoggedIn ? (
+                <div className="flex items-center gap-2 pl-2 border-l border-gray-300">
+                  <button
+                    onClick={() => setCurrentPage('admin')}
+                    className={`neo-border px-3 py-1.5 text-xs font-extrabold transition-all ${
+                      currentPage === 'admin' ? 'bg-[#00E5FF] neo-shadow-sm' : 'bg-white hover:bg-gray-100'
+                    }`}
+                  >
+                    Dashboard Admin
+                  </button>
+                  <button
+                    onClick={onLogout}
+                    className="neo-border px-2.5 py-1.5 text-xs font-extrabold bg-red-100 hover:bg-red-200 text-red-700"
+                    title="Keluar Admin"
+                  >
+                    Logout
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={onOpenLogin}
+                  className="neo-border px-3 py-1.5 text-xs font-extrabold bg-black text-white neo-shadow-sm hover:bg-gray-800"
+                >
+                  Login Admin
+                </button>
+              )}
+            </nav>
+          </div>
+        </header>
+      );
+    }
+
+    // Footer
+    function Footer() {
+      return (
+        <footer className="mt-auto bg-white neo-border border-b-0 border-x-0 py-6">
+          <div className="max-w-7xl mx-auto px-4 text-center">
+            <p className="font-extrabold text-sm">Dwisyafitriproject&copy; {new Date().getFullYear()}</p>
+            <p className="text-xs font-medium text-gray-500 mt-1">
+              Created by : Dwi syafitri | 088289369002
+            </p>
+          </div>
+        </footer>
+      );
+    }
+
+    // StrukModal
+    function StrukModal({ isOpen, sale, onClose }) {
+      const [isShareOpen, setIsShareOpen] = useState(false);
+      const [sharePhone, setSharePhone] = useState('');
+      const [isSharing, setIsSharing] = useState(false);
+
+      useEffect(() => {
+        if (isOpen && sale) {
+          setSharePhone(cleanWaInput(sale.WHATSAPP || ''));
+          setIsShareOpen(false);
+          setIsSharing(false);
+        }
+      }, [isOpen, sale]);
+
+      if (!isOpen || !sale) return null;
+
+      const handlePrint = () => {
+        window.print();
+      };
+
+      // ===== DIUBAH: handleSharePdf — alur baru via Google Drive =====
+      const handleSharePdf = async () => {
+        // 1. Ambil & validasi nomor WhatsApp, konversi 08xx → 628xx otomatis
+        const phone = cleanWaInput(sharePhone);
+        if (phone.length < 8) {
+          alert('Masukkan nomor WhatsApp tujuan yang valid.');
+          return;
+        }
+
+        setIsSharing(true);
+        try {
+          // 2. Generate file PDF dari data struk yang sedang tampil di browser
+          const pdf = createReceiptPdf(sale);
+
+          // 3. Upload PDF ke Google Drive (folder otomatis dibuat jika belum ada)
+          //    Server akan set permission "Anyone with the link can view" secara otomatis
+          const result = await gasCall('uploadReceiptPdfToDrive', {
+            base64: pdf.dataUri,
+            filename: pdf.filename,
+            folderName: 'Struk Transaksi Dwisyafitriproject',
+          });
+
+          if (!result || !result.ok) {
+            throw new Error(result?.message || 'Gagal mengupload PDF ke Google Drive.');
+          }
+
+          // 4. Ambil URL file PDF dari Google Drive
+          const driveUrl = result.fileUrl;
+
+          // 5. Buat pesan otomatis berisi sapaan, detail transaksi, dan link Drive
+          const totalBelanja = typeof sale.HARGA === 'number'
+            ? sale.HARGA.toLocaleString('id-ID')
+            : String(sale.HARGA || '0');
+          const message = [
+            `Halo ${sale.NAMA_PEMBELI || 'Pelanggan'}, terima kasih sudah berbelanja di Dwisyafitriproject! 🙏`,
+            ``,
+            `Berikut detail transaksi Anda:`,
+            `📄 No. Transaksi : ${sale.NO_TRANSAKSI || sale.ID || '-'}`,
+            `💰 Total Belanja  : Rp ${totalBelanja}`,
+            ``,
+            `Struk PDF Anda dapat diunduh melalui link berikut:`,
+            driveUrl,
+            ``,
+            `Semoga puas dengan pelayanan kami! 😊`,
+          ].join('\n');
+
+          // 6. Gabungkan nomor, pesan, dan link ke format URL WhatsApp siap klik
+          const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+
+          // 7. Buka chat WhatsApp customer secara otomatis
+          window.open(waUrl, '_blank');
+
+          setIsShareOpen(false);
+        } catch (error) {
+          alert(error?.message || 'Gagal mengirim struk PDF.');
+        } finally {
+          setIsSharing(false);
+        }
+      };
+      // ===== SELESAI: handleSharePdf =====
+
+      return (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white neo-border neo-shadow-lg p-4 max-w-sm w-full relative">
+            <button
+              onClick={onClose}
+              className="absolute top-3 right-3 w-7 h-7 bg-gray-200 neo-border font-bold text-xs flex items-center justify-center hover:bg-gray-300"
+            >
+              ✕
+            </button>
+
+            <div id="print-receipt-container" className="receipt-paper text-center">
+              <div className="border-b-2 border-black pb-3 mb-3">
+                <h2 className="font-extrabold text-xl uppercase tracking-wider">Dwisyafitriproject</h2>
+                <p className="text-xs font-bold text-gray-600">STRUK PEMBAYARAN KASIR</p>
+              </div>
+
+              <div className="text-left text-xs font-mono space-y-1 mb-4 border-b border-gray-300 pb-3">
+                <div className="flex justify-between">
+                  <span className="text-gray-500">No Trx:</span>
+                  <span className="font-bold">{sale.NO_TRANSAKSI || sale.ID}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Tanggal:</span>
+                  <span>{fmtDate(sale.TANGGAL, true)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Pembeli:</span>
+                  <span className="font-bold">{sale.NAMA_PEMBELI}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-gray-500">Metode:</span>
+                  <span className="font-bold uppercase">{sale.METODE}</span>
+                </div>
+              </div>
+
+              <div className="text-left mb-4 border-b border-gray-300 pb-3">
+                <div className="text-[11px] font-bold text-gray-500 uppercase mb-1">Detail Pesanan:</div>
+                <div className="receipt-product font-bold text-sm">{sale.PRODUK}</div>
+              </div>
+
+              <div className="text-left text-xs font-mono space-y-1 mb-6">
+                <div className="flex justify-between">
+                  <span>Total Tagihan:</span>
+                  <span className="font-bold">{rp(sale.HARGA)}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Bayar:</span>
+                  <span>{rp(sale.BAYAR)}</span>
+                </div>
+                <div className="flex justify-between text-sm font-extrabold border-t pt-1">
+                  <span>Kembalian:</span>
+                  <span>{rp(sale.KEMBALIAN)}</span>
+                </div>
+              </div>
+
+              <p className="text-[11px] font-bold text-gray-500 mb-4">
+                Terima kasih telah berbelanja di Dwisyafitriproject!
+              </p>
+            </div>
+
+            {isShareOpen && (
+              <div className="mt-3 neo-border bg-[#E8FFF0] p-3">
+                <label className="block text-xs font-extrabold uppercase mb-1">
+                  Nomor WhatsApp Tujuan
+                </label>
+                <input
+                  type="tel"
+                  value={sharePhone}
+                  onChange={(e) => setSharePhone(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleSharePdf();
+                  }}
+                  placeholder="08123456789"
+                  autoFocus
+                  className="w-full neo-border px-3 py-2 text-sm font-bold outline-none focus:neo-shadow bg-white"
+                />
+                <p className="text-[10px] text-gray-600 mt-1">
+                  Nomor 08 otomatis diubah ke format internasional +62.
+                </p>
+                <button
+                  onClick={handleSharePdf}
+                  disabled={isSharing}
+                  className="w-full mt-2 bg-[#25D366] neo-border neo-shadow-sm py-2 text-xs font-extrabold hover:bg-green-400 disabled:opacity-50"
+                >
+                  {isSharing ? 'Mengupload ke Drive...' : 'Kirim PDF ke WhatsApp'}
+                </button>
+              </div>
+            )}
+
+            <div className="flex gap-2 mt-3">
+              <button
+                onClick={handlePrint}
+                className="flex-1 bg-[#FFDD00] neo-border neo-shadow-sm py-2 text-xs font-extrabold hover:bg-yellow-400"
+              >
+                Cetak 58 mm
+              </button>
+              <button
+                onClick={() => setIsShareOpen((value) => !value)}
+                className="bg-[#25D366] neo-border neo-shadow-sm px-3 py-2 text-xs font-extrabold hover:bg-green-400"
+                title="Kirim struk PDF ke WhatsApp"
+                aria-label="Kirim struk PDF ke WhatsApp"
+              >
+                <svg
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <circle cx="18" cy="5" r="3"></circle>
+                  <circle cx="6" cy="12" r="3"></circle>
+                  <circle cx="18" cy="19" r="3"></circle>
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                </svg>
+              </button>
+              <button
+                onClick={onClose}
+                className="neo-border px-4 py-2 text-xs font-extrabold bg-gray-100 hover:bg-gray-200"
+              >
+                Tutup
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // CatalogProductCard with slidable gallery
+    function CatalogProductCard({ product, onSelectDetail, onPesanWa }) {
+      const [currentIdx, setCurrentIdx] = useState(0);
+
+      const rawImgs = [product.FOTO_URL, product.FOTO_URL2, product.FOTO_URL3].filter(Boolean);
+      const imgs = rawImgs.map(convertDriveLink);
+      const displayImgs = imgs.length > 0 ? imgs : ['https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500'];
+
+      useEffect(() => {
+        if (displayImgs.length <= 1) return undefined;
+        const timer = setInterval(() => {
+          setCurrentIdx((prev) => (prev + 1) % displayImgs.length);
+        }, 4600);
+        return () => clearInterval(timer);
+      }, [displayImgs.length]);
+
+      const handlePrev = (e) => {
+        e.stopPropagation();
+        setCurrentIdx((prev) => (prev - 1 + displayImgs.length) % displayImgs.length);
+      };
+
+      const handleNext = (e) => {
+        e.stopPropagation();
+        setCurrentIdx((prev) => (prev + 1) % displayImgs.length);
+      };
+
+      return (
+        <div className="bg-white neo-border neo-shadow flex flex-col hover:-translate-y-1 transition-all duration-150 group">
+          {/* Photo Carousel */}
+          <div className="relative h-48 bg-gray-100 overflow-hidden border-b-2 border-black select-none">
+            <div
+              className="flex h-full transition-transform duration-300 ease-out"
+              style={{ transform: `translateX(-${currentIdx * 100}%)` }}
+            >
+              {displayImgs.map((imgUrl, i) => (
+                <img
+                  key={i}
+                  src={imgUrl}
+                  alt={`${product.NAMA} - Foto ${i + 1}`}
+                  className="min-w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              ))}
+            </div>
+
+            {/* Badge Status */}
+            <span className="absolute top-2 right-2 px-2 py-0.5 text-[10px] font-extrabold neo-border uppercase bg-[#00E5A0] text-black">
+              Tersedia
+            </span>
+
+            {/* Carousel Controls */}
+            {displayImgs.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  className="absolute left-1.5 top-1/2 -translate-y-1/2 w-7 h-7 bg-black text-[#FFDD00] neo-border flex items-center justify-center font-extrabold hover:bg-[#FFDD00] hover:text-black z-10 text-xs"
+                  aria-label="Foto sebelumnya"
+                >
+                  ‹
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNext}
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 bg-black text-[#FFDD00] neo-border flex items-center justify-center font-extrabold hover:bg-[#FFDD00] hover:text-black z-10 text-xs"
+                  aria-label="Foto selanjutnya"
+                >
+                  ›
+                </button>
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+                  {displayImgs.map((_, dotIdx) => (
+                    <button
+                      key={dotIdx}
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); setCurrentIdx(dotIdx); }}
+                      className={`w-2 h-2 neo-border transition-all ${
+                        dotIdx === currentIdx ? 'bg-[#FFDD00]' : 'bg-white/80'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+
+          <div className="p-4 flex flex-col flex-1">
+            <h3 className="font-extrabold text-base leading-snug mb-1 text-black">{product.NAMA}</h3>
+            <p className="font-mono font-extrabold text-lg text-[#00E5FF] bg-black px-2 py-0.5 inline-block self-start mb-3 neo-border">
+              {rp(product.HARGA)}
+            </p>
+            <p className="text-xs text-gray-600 font-medium line-clamp-2 mb-4 flex-1">
+              {product.DESKRIPSI || 'Produk berkualitas tinggi dari toko kami.'}
+            </p>
+
+            <div className="flex gap-2 pt-2 border-t border-gray-200">
+              <button
+                onClick={() => onSelectDetail(product)}
+                className="flex-1 bg-gray-100 neo-border py-1.5 text-xs font-extrabold hover:bg-gray-200"
+              >
+                Detail
+              </button>
+              {product.LINK ? (
+                <a
+                  href={product.LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 bg-[#FFDD00] neo-border py-1.5 text-xs font-extrabold hover:bg-yellow-400 text-center flex items-center justify-center text-black"
+                >
+                  Pesan
+                </a>
+              ) : (
+                <button
+                  onClick={() => onPesanWa(product)}
+                  className="flex-1 bg-[#00E5A0] neo-border py-1.5 text-xs font-extrabold hover:bg-emerald-400 text-center text-black"
+                >
+                  Pesan WA
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // Modal Detail Produk dengan Slider
+    function ProductDetailModal({ product, onClose, onPesanWa }) {
+      const [currentIdx, setCurrentIdx] = useState(0);
+
+      if (!product) return null;
+
+      const rawImgs = [product.FOTO_URL, product.FOTO_URL2, product.FOTO_URL3].filter(Boolean);
+      const imgs = rawImgs.map(convertDriveLink);
+      const displayImgs = imgs.length > 0 ? imgs : ['https://images.unsplash.com/photo-1517701604599-bb29b565090c?w=500'];
+
+      const handlePrev = () => {
+        setCurrentIdx((prev) => (prev - 1 + displayImgs.length) % displayImgs.length);
+      };
+
+      const handleNext = () => {
+        setCurrentIdx((prev) => (prev + 1) % displayImgs.length);
+      };
+
+      return (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white neo-border neo-shadow-lg p-6 max-w-md w-full relative max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={onClose}
+              className="absolute top-3 right-3 w-7 h-7 bg-gray-200 neo-border font-bold text-xs flex items-center justify-center hover:bg-gray-300"
+            >
+              ✕
+            </button>
+
+            <h3 className="font-black text-xl mb-3 pr-8 text-black">{product.NAMA}</h3>
+
+            {/* Slider Foto Detail */}
+            <div className="relative h-60 bg-gray-100 neo-border mb-4 overflow-hidden select-none">
+              <div
+                className="flex h-full transition-transform duration-300 ease-out"
+                style={{ transform: `translateX(-${currentIdx * 100}%)` }}
+              >
+                {displayImgs.map((imgUrl, i) => (
+                  <img
+                    key={i}
+                    src={imgUrl}
+                    alt={`${product.NAMA} - Foto ${i + 1}`}
+                    className="min-w-full h-full object-cover"
+                    referrerPolicy="no-referrer"
+                  />
+                ))}
+              </div>
+
+              {displayImgs.length > 1 && (
+                <>
+                  <button
+                    type="button"
+                    onClick={handlePrev}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black text-[#FFDD00] neo-border flex items-center justify-center font-extrabold hover:bg-[#FFDD00] hover:text-black z-10 text-xs"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleNext}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 bg-black text-[#FFDD00] neo-border flex items-center justify-center font-extrabold hover:bg-[#FFDD00] hover:text-black z-10 text-xs"
+                  >
+                    ›
+                  </button>
+                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                    {displayImgs.map((_, dotIdx) => (
+                      <button
+                        key={dotIdx}
+                        type="button"
+                        onClick={() => setCurrentIdx(dotIdx)}
+                        className={`w-3 h-3 neo-border transition-all ${
+                          dotIdx === currentIdx ? 'bg-[#FFDD00]' : 'bg-white/80'
+                        }`}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+
+            <div className="font-mono font-extrabold text-xl text-black mb-3">
+              {rp(product.HARGA)}
+            </div>
+
+            <p className="text-sm font-medium text-gray-700 mb-6 whitespace-pre-line leading-relaxed">
+              {product.DESKRIPSI || 'Belum ada deskripsi lengkap untuk produk ini.'}
+            </p>
+
+            <div className="flex flex-col gap-2">
+              {product.LINK ? (
+                <a
+                  href={product.LINK}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-[#FFDD00] neo-border neo-shadow-sm py-2.5 text-xs font-extrabold text-center hover:bg-yellow-400 block text-black"
+                >
+                  ⌁ Pesan Produk Sekarang
+                </a>
+              ) : (
+                <button
+                  onClick={() => onPesanWa(product)}
+                  className="w-full bg-[#00E5A0] neo-border neo-shadow-sm py-2.5 text-xs font-extrabold hover:bg-emerald-400 text-black"
+                >
+                  💬 Pesan Langsung via WhatsApp
+                </button>
+              )}
+
+              {product.LINK_DESAIN && (
+                <a
+                  href={product.LINK_DESAIN}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full bg-black text-[#FFDD00] neo-border py-2 text-xs font-extrabold text-center hover:bg-gray-900 block"
+                >
+                  🎨 Lihat Link Desain
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // KatalogPage
+    function KatalogPage({ products, isLoading }) {
+      const [selectedProduct, setSelectedProduct] = useState(null);
+      const [searchQuery, setSearchQuery] = useState('');
+
+      const displayedProducts = useMemo(() => {
+        return products.filter((p) => {
+          const isShown = p.STATUS !== 'disembunyikan';
+          const matchSearch = p.NAMA.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            p.DESKRIPSI?.toLowerCase().includes(searchQuery.toLowerCase());
+          return isShown && matchSearch;
+        });
+      }, [products, searchQuery]);
+
+      const handlePesanWa = (p) => {
+        const text = `Halo Admin Dwisyafitriproject, saya ingin memesan produk:\n*${p.NAMA}* (${rp(p.HARGA)})\nApakah stok tersedia? Terima kasih!`;
+        window.open(`https://wa.me/6288289369002?text=${encodeURIComponent(text)}`, '_blank');
+      };
+
+      return (
+        <div className="max-w-7xl mx-auto px-4 py-6 w-full">
+          <div className="bg-[#FFDD00] neo-border neo-shadow-lg p-6 mb-8 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="font-black text-2xl md:text-3xl uppercase tracking-tight">Katalog Produk Pilihan</h2>
+              <p className="font-bold text-sm text-gray-800 mt-1">Temukan produk terbaik kami dengan harga ramah kantong.</p>
+            </div>
+            <div className="w-full md:w-72">
+              <input
+                type="text"
+                placeholder="Cari produk..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+              />
+            </div>
+          </div>
+
+          {isLoading ? (
+            <div className="text-center py-12 font-extrabold text-lg">Memuat produk...</div>
+          ) : displayedProducts.length === 0 ? (
+            <div className="text-center py-12 bg-white neo-border p-8">
+              <p className="font-extrabold text-lg text-gray-500">Tidak ada produk ditemukan.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {displayedProducts.map((p) => (
+                <CatalogProductCard
+                  key={p.ID}
+                  product={p}
+                  onSelectDetail={(prod) => setSelectedProduct(prod)}
+                  onPesanWa={handlePesanWa}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Modal Detail Produk */}
+          {selectedProduct && (
+            <ProductDetailModal
+              product={selectedProduct}
+              onClose={() => setSelectedProduct(null)}
+              onPesanWa={handlePesanWa}
+            />
+          )}
+        </div>
+      );
+    }
+
+    // UlasanPage
+    function UlasanPage({ reviews, onAddReview, isLoading }) {
+      const [nama, setNama] = useState('');
+      const [wa, setWa] = useState('');
+      const [rating, setRating] = useState(5);
+      const [reviewText, setReviewText] = useState('');
+      const [isSubmitting, setIsSubmitting] = useState(false);
+
+      const averageRating = useMemo(() => {
+        if (reviews.length === 0) return '5.0';
+        const sum = reviews.reduce((acc, r) => acc + (Number(r.RATING) || 5), 0);
+        return (sum / reviews.length).toFixed(1);
+      }, [reviews]);
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!nama.trim() || !reviewText.trim()) return;
+
+        setIsSubmitting(true);
+        try {
+          await onAddReview({
+            NAMA: nama.trim(),
+            WHATSAPP: cleanWaInput(wa),
+            RATING: rating,
+            REVIEW: reviewText.trim(),
+            TANGGAL: new Date().toISOString(),
+          });
+          setNama('');
+          setWa('');
+          setRating(5);
+          setReviewText('');
+        } finally {
+          setIsSubmitting(false);
+        }
+      };
+
+      return (
+        <div className="max-w-7xl mx-auto px-4 py-6 w-full">
+          <div className="bg-[#00E5FF] neo-border neo-shadow-lg p-6 mb-8 flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="font-black text-2xl md:text-3xl uppercase tracking-tight">Ulasan & Rating Pelanggan</h2>
+              <p className="font-bold text-sm text-gray-800 mt-1">Kepuasan pelanggan adalah prioritas utama kami.</p>
+            </div>
+            <div className="bg-white neo-border px-4 py-2 text-center neo-shadow-sm">
+              <div className="text-2xl font-black">{averageRating} / 5.0</div>
+              <div className="text-[10px] font-bold text-gray-500 uppercase">Dari {reviews.length} Ulasan</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Form Tambah Ulasan */}
+            <div className="bg-white neo-border neo-shadow p-6 h-fit">
+              <h3 className="font-black text-lg mb-4 border-b-2 border-black pb-2">Tulis Ulasan Anda</h3>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase mb-1">Nama Anda *</label>
+                  <input
+                    type="text"
+                    required
+                    value={nama}
+                    onChange={(e) => setNama(e.target.value)}
+                    placeholder="Contoh: Budi Santoso"
+                    className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase mb-1">No. WhatsApp (Opsional)</label>
+                  <input
+                    type="text"
+                    value={wa}
+                    onChange={(e) => setWa(e.target.value)}
+                    placeholder="Contoh: 08123456789"
+                    className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase mb-1">Rating Bintang</label>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setRating(star)}
+                        className={`w-9 h-9 neo-border font-black text-base flex items-center justify-center transition-all ${
+                          star <= rating ? 'bg-[#FFDD00] neo-shadow-sm' : 'bg-gray-100 text-gray-400'
+                        }`}
+                      >
+                        ★
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase mb-1">Ulasan Anda *</label>
+                  <textarea
+                    required
+                    rows={4}
+                    value={reviewText}
+                    onChange={(e) => setReviewText(e.target.value)}
+                    placeholder="Bagikan pengalaman rasa & pelayanan toko kami..."
+                    className="w-full neo-border p-3 text-sm bg-white font-medium outline-none focus:neo-shadow resize-none"
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#FFDD00] neo-border neo-shadow py-2.5 text-xs font-extrabold hover:bg-yellow-400 disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Kirim...' : 'Kirim Ulasan'}
+                </button>
+              </form>
+            </div>
+
+            {/* List Ulasan */}
+            <div className="lg:col-span-2 space-y-4">
+              <h3 className="font-black text-lg border-b-2 border-black pb-2">Semua Ulasan</h3>
+              {isLoading ? (
+                <div className="text-center py-8 font-extrabold">Memuat ulasan...</div>
+              ) : reviews.length === 0 ? (
+                <div className="bg-white neo-border p-8 text-center font-bold text-gray-500">
+                  Belum ada ulasan. Jadilah yang pertama memberikan ulasan!
+                </div>
+              ) : (
+                reviews.map((r) => (
+                  <div key={r.ID} className="bg-white neo-border neo-shadow p-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <div>
+                        <div className="font-extrabold text-sm">{r.NAMA}</div>
+                        <div className="text-[10px] text-gray-500 font-mono">{fmtDate(r.TANGGAL)}</div>
+                      </div>
+                      <div className="flex text-yellow-500 text-sm font-bold">
+                        {'★'.repeat(Number(r.RATING) || 5)}
+                      </div>
+                    </div>
+                    <p className="text-sm font-medium text-gray-800">{r.REVIEW}</p>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // AdminLogin Modal
+    function AdminLogin({ isOpen, onClose, onLoginSuccess, showToast }) {
+      const [username, setUsername] = useState('');
+      const [password, setPassword] = useState('');
+      const [isLoading, setIsLoading] = useState(false);
+
+      if (!isOpen) return null;
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsLoading(true);
+        try {
+          const res = await gasCall('loginAdmin', { username, password });
+          if (res && res.ok) {
+            showToast('Login Admin berhasil!', 'success');
+            onLoginSuccess();
+            onClose();
+          } else {
+            showToast(res?.message || 'Username atau password salah!', 'error');
+          }
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      return (
+        <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+          <div className="bg-white neo-border neo-shadow-lg p-6 max-w-sm w-full relative">
+            <button
+              onClick={onClose}
+              className="absolute top-3 right-3 w-7 h-7 bg-gray-200 neo-border font-bold text-xs flex items-center justify-center hover:bg-gray-300"
+            >
+              ✕
+            </button>
+
+            <h3 className="font-black text-xl mb-4 text-center uppercase tracking-tight">Login Admin Toko</h3>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Username</label>
+                <input
+                  type="text"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Password</label>
+                <input
+                  type="password"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-[#00E5FF] neo-border neo-shadow py-2.5 text-xs font-extrabold hover:bg-cyan-300 disabled:opacity-50"
+              >
+                {isLoading ? 'Memverifikasi...' : 'Masuk Dashboard'}
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    // AdminProdukTab
+    function AdminProdukTab({ products, onSaveProduct, onDeleteProduct }) {
+      const [editingId, setEditingId] = useState(null);
+      const [nama, setNama] = useState('');
+      const [harga, setHarga] = useState('');
+      const [foto1, setFoto1] = useState('');
+      const [foto2, setFoto2] = useState('');
+      const [foto3, setFoto3] = useState('');
+      const [link, setLink] = useState('');
+      const [linkDesain, setLinkDesain] = useState('');
+      const [deskripsi, setDeskripsi] = useState('');
+      const [status, setStatus] = useState('ditampilkan');
+      const [isSubmitting, setIsSubmitting] = useState(false);
+
+      const handleEdit = (p) => {
+        setEditingId(p.ID);
+        setNama(p.NAMA || '');
+        setHarga(p.HARGA ? String(p.HARGA) : '');
+        setFoto1(p.FOTO_URL || '');
+        setFoto2(p.FOTO_URL2 || '');
+        setFoto3(p.FOTO_URL3 || '');
+        setLink(p.LINK || '');
+        setLinkDesain(p.LINK_DESAIN || '');
+        setDeskripsi(p.DESKRIPSI || '');
+        setStatus(p.STATUS || 'ditampilkan');
+      };
+
+      const handleReset = () => {
+        setEditingId(null);
+        setNama('');
+        setHarga('');
+        setFoto1('');
+        setFoto2('');
+        setFoto3('');
+        setLink('');
+        setLinkDesain('');
+        setDeskripsi('');
+        setStatus('ditampilkan');
+      };
+
+      const handleUrlChange = (val, setter) => {
+        setter(convertDriveLink(val));
+      };
+
+      const handleFileUpload = (e, setter) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        compressImage(file, (dataUrl) => {
+          setter(dataUrl);
+        });
+      };
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!nama.trim() || !harga) return;
+
+        setIsSubmitting(true);
+        try {
+          await onSaveProduct({
+            ID: editingId || undefined,
+            NAMA: nama.trim(),
+            HARGA: Number(harga),
+            FOTO_URL: foto1,
+            FOTO_URL2: foto2,
+            FOTO_URL3: foto3,
+            LINK: link.trim(),
+            LINK_DESAIN: linkDesain.trim(),
+            DESKRIPSI: deskripsi.trim(),
+            STATUS: status,
+          });
+          handleReset();
+        } finally {
+          setIsSubmitting(false);
+        }
+      };
+
+      const handleToggleStatus = async (p) => {
+        const newStatus = p.STATUS === 'ditampilkan' ? 'disembunyikan' : 'ditampilkan';
+        await onSaveProduct({ ...p, STATUS: newStatus });
+      };
+
+      return (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Form Produk */}
+          <div className="bg-white neo-border neo-shadow p-6 h-fit space-y-4">
+            <h3 className="font-black text-lg mb-2 border-b-2 border-black pb-2">
+              {editingId ? `Edit Produk #${editingId}` : 'Tambah Produk Baru'}
+            </h3>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Nama Produk *</label>
+                <input
+                  type="text"
+                  required
+                  value={nama}
+                  onChange={(e) => setNama(e.target.value)}
+                  placeholder="Nama produk..."
+                  className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Harga (Rp) *</label>
+                <input
+                  type="number"
+                  required
+                  min="0"
+                  value={harga}
+                  onChange={(e) => setHarga(e.target.value)}
+                  placeholder="15000"
+                  className="w-full neo-border px-3 py-2 text-sm bg-white font-mono font-bold outline-none focus:neo-shadow"
+                />
+              </div>
+
+              {/* Foto 1 Utama */}
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">
+                  📷 Foto 1 — Utama <span className="normal-case font-normal text-gray-500">(URL / Drive / Upload)</span>
+                </label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={foto1}
+                    onChange={(e) => handleUrlChange(e.target.value, setFoto1)}
+                    placeholder="Paste URL / Link Google Drive..."
+                    className="flex-1 neo-border px-3 py-1.5 text-xs bg-white outline-none focus:neo-shadow"
+                  />
+                  <label className="cursor-pointer neo-border bg-[#FFDD00] px-3 py-1.5 font-bold text-xs hover:bg-yellow-400">
+                    Upload
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileUpload(e, setFoto1)}
+                    />
+                  </label>
+                </div>
+                {foto1 && (
+                  <img src={foto1} alt="Preview Foto 1" className="mt-2 w-14 h-14 object-cover neo-border" referrerPolicy="no-referrer" />
+                )}
+              </div>
+
+              {/* Foto 2 Opsional */}
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">
+                  📷 Foto 2 <span className="normal-case font-normal text-gray-500">(Opsional)</span>
+                </label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={foto2}
+                    onChange={(e) => handleUrlChange(e.target.value, setFoto2)}
+                    placeholder="Paste URL / Link Google Drive..."
+                    className="flex-1 neo-border px-3 py-1.5 text-xs bg-white outline-none focus:neo-shadow"
+                  />
+                  <label className="cursor-pointer neo-border bg-[#FFDD00] px-3 py-1.5 font-bold text-xs hover:bg-yellow-400">
+                    Upload
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileUpload(e, setFoto2)}
+                    />
+                  </label>
+                </div>
+                {foto2 && (
+                  <img src={foto2} alt="Preview Foto 2" className="mt-2 w-14 h-14 object-cover neo-border" referrerPolicy="no-referrer" />
+                )}
+              </div>
+
+              {/* Foto 3 Opsional */}
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">
+                  📷 Foto 3 <span className="normal-case font-normal text-gray-500">(Opsional)</span>
+                </label>
+                <div className="flex gap-2 items-center">
+                  <input
+                    type="text"
+                    value={foto3}
+                    onChange={(e) => handleUrlChange(e.target.value, setFoto3)}
+                    placeholder="Paste URL / Link Google Drive..."
+                    className="flex-1 neo-border px-3 py-1.5 text-xs bg-white outline-none focus:neo-shadow"
+                  />
+                  <label className="cursor-pointer neo-border bg-[#FFDD00] px-3 py-1.5 font-bold text-xs hover:bg-yellow-400">
+                    Upload
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => handleFileUpload(e, setFoto3)}
+                    />
+                  </label>
+                </div>
+                {foto3 && (
+                  <img src={foto3} alt="Preview Foto 3" className="mt-2 w-14 h-14 object-cover neo-border" referrerPolicy="no-referrer" />
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Link Pemesanan (Opsional)</label>
+                <input
+                  type="text"
+                  value={link}
+                  onChange={(e) => setLink(e.target.value)}
+                  placeholder="https://..."
+                  className="w-full neo-border px-3 py-2 text-xs bg-white font-bold outline-none focus:neo-shadow"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Link Desain (Opsional)</label>
+                <input
+                  type="text"
+                  value={linkDesain}
+                  onChange={(e) => setLinkDesain(e.target.value)}
+                  placeholder="https://canva.com/..."
+                  className="w-full neo-border px-3 py-2 text-xs bg-white font-bold outline-none focus:neo-shadow"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Status Tampil</label>
+                <select
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="w-full neo-border px-3 py-2 text-xs bg-white font-bold outline-none focus:neo-shadow"
+                >
+                  <option value="ditampilkan">Ditampilkan</option>
+                  <option value="disembunyikan">Disembunyikan</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Deskripsi Produk</label>
+                <textarea
+                  rows={2}
+                  value={deskripsi}
+                  onChange={(e) => setDeskripsi(e.target.value)}
+                  className="w-full neo-border p-2.5 text-xs bg-white font-medium outline-none focus:neo-shadow resize-none"
+                />
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 bg-[#FFDD00] neo-border neo-shadow py-2.5 text-xs font-extrabold hover:bg-yellow-400 disabled:opacity-50"
+                >
+                  {isSubmitting ? 'Menyimpan...' : editingId ? 'Update Produk' : 'Simpan Produk'}
+                </button>
+                {editingId && (
+                  <button
+                    type="button"
+                    onClick={handleReset}
+                    className="neo-border px-3 py-2.5 text-xs font-extrabold bg-gray-100 hover:bg-gray-200"
+                  >
+                    Batal
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+
+          {/* Tabel Produk */}
+          <div className="lg:col-span-2">
+            <div className="bg-white neo-border neo-shadow overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-black text-[#FFDD00] font-bold uppercase">
+                    <th className="p-3">Foto</th>
+                    <th className="p-3">Produk</th>
+                    <th className="p-3">Harga</th>
+                    <th className="p-3">Status</th>
+                    <th className="p-3 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 font-medium">
+                  {products.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="p-4 text-center text-gray-400">Belum ada produk.</td>
+                    </tr>
+                  ) : (
+                    products.map((p) => {
+                      const thumbUrl = convertDriveLink(p.FOTO_URL) || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100';
+                      const isVisible = p.STATUS === 'ditampilkan';
+                      return (
+                        <tr key={p.ID} className="hover:bg-yellow-50">
+                          <td className="p-3">
+                            <img
+                              src={thumbUrl}
+                              alt={p.NAMA}
+                              className="w-10 h-10 object-cover neo-border"
+                              referrerPolicy="no-referrer"
+                            />
+                          </td>
+                          <td className="p-3">
+                            <div className="font-bold text-sm">{p.NAMA}</div>
+                            <div className="text-[10px] font-mono text-gray-500">{p.ID}</div>
+                          </td>
+                          <td className="p-3 font-mono font-bold">{rp(p.HARGA)}</td>
+                          <td className="p-3">
+                            <button
+                              onClick={() => handleToggleStatus(p)}
+                              className={`px-2.5 py-1 font-bold text-[10px] uppercase neo-border ${
+                                isVisible ? 'bg-[#00E5FF] text-black' : 'bg-gray-200 text-gray-700'
+                              }`}
+                            >
+                              {isVisible ? 'Tampil' : 'Sembunyi'}
+                            </button>
+                          </td>
+                          <td className="p-3 text-center space-x-2">
+                            <button
+                              onClick={() => handleEdit(p)}
+                              className="neo-border px-2 py-1 bg-yellow-300 font-bold hover:bg-yellow-400"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => onDeleteProduct(p.ID)}
+                              className="neo-border px-2 py-1 bg-red-400 text-white font-bold hover:bg-red-500"
+                            >
+                              Hapus
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // AdminKasirTab (POS Multi-Product)
+    function AdminKasirTab({ products, sales, onSaveSale, onDeleteSale, onShowReceipt }) {
+      const [editingId, setEditingId] = useState(null);
+      const [nama, setNama] = useState('');
+      const [wa, setWa] = useState('');
+      const [cart, setCart] = useState([]);
+      const [selectedProduct, setSelectedProduct] = useState('');
+      const [metode, setMetode] = useState('Cash');
+      const [bayar, setBayar] = useState('');
+      const [isSubmitting, setIsSubmitting] = useState(false);
+
+      const totalHarga = useMemo(() => {
+        return cart.reduce((sum, item) => sum + item.harga * item.qty, 0);
+      }, [cart]);
+
+      const handleAddProductToCart = (prodName) => {
+        if (!prodName) return;
+        const prod = products.find((x) => x.NAMA === prodName);
+        if (!prod) return;
+
+        setCart((prev) => {
+          const existing = prev.find((x) => x.nama === prod.NAMA);
+          if (existing) {
+            return prev.map((x) =>
+              x.nama === prod.NAMA ? { ...x, qty: x.qty + 1 } : x
+            );
+          }
+          return [...prev, { nama: prod.NAMA, harga: prod.HARGA, qty: 1 }];
+        });
+        setSelectedProduct('');
+      };
+
+      const handleUpdateQty = (namaProd, delta) => {
+        setCart((prev) =>
+          prev
+            .map((x) => {
+              if (x.nama === namaProd) {
+                const newQty = x.qty + delta;
+                return newQty > 0 ? { ...x, qty: newQty } : null;
+              }
+              return x;
+            })
+            .filter(Boolean)
+        );
+      };
+
+      const handleRemoveFromCart = (namaProd) => {
+        setCart((prev) => prev.filter((x) => x.nama !== namaProd));
+      };
+
+      const handleMetodeChange = (e) => {
+        const val = e.target.value;
+        setMetode(val);
+        if (val !== 'Cash') {
+          setBayar(totalHarga);
+        } else {
+          setBayar('');
+        }
+      };
+
+      const currentBayarNum = bayar === '' ? (metode === 'Cash' ? 0 : totalHarga) : Number(bayar);
+      const kembalian = metode === 'Cash' ? Math.max(0, currentBayarNum - totalHarga) : 0;
+
+      const handleResetForm = () => {
+        setEditingId(null);
+        setNama('');
+        setWa('');
+        setCart([]);
+        setSelectedProduct('');
+        setMetode('Cash');
+        setBayar('');
+      };
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!nama.trim() || cart.length === 0 || totalHarga <= 0) return;
+        if (metode === 'Cash' && currentBayarNum < totalHarga) return;
+
+        const produkSummary = cart.map((i) => `${i.nama} (${i.qty}x)`).join(', ');
+
+        setIsSubmitting(true);
+        try {
+          const savedSale = await onSaveSale({
+            ID: editingId || undefined,
+            NAMA_PEMBELI: nama.trim(),
+            WHATSAPP: cleanWaInput(wa),
+            PRODUK: produkSummary,
+            HARGA: totalHarga,
+            BAYAR: currentBayarNum,
+            METODE: metode,
+            KEMBALIAN: kembalian,
+            TANGGAL: new Date().toISOString(),
+          });
+          handleResetForm();
+          if (savedSale) {
+            onShowReceipt(savedSale);
+          }
+        } finally {
+          setIsSubmitting(false);
+        }
+      };
+
+      return (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Form Kasir POS */}
+          <div className="bg-white neo-border neo-shadow p-6 h-fit">
+            <h3 className="font-black text-lg mb-4 border-b-2 border-black pb-2">Input Penjualan Kasir</h3>
+            
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Nama Pembeli *</label>
+                <input
+                  type="text"
+                  required
+                  value={nama}
+                  onChange={(e) => setNama(e.target.value)}
+                  placeholder="Pelanggan Umum "
+                  className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">No. WhatsApp</label>
+                <input
+                  type="text"
+                  value={wa}
+                  onChange={(e) => setWa(e.target.value)}
+                  placeholder="08xx-xxx-xxx"
+                  className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Pilih Produk *</label>
+                <div className="flex gap-2">
+                  <select
+                    value={selectedProduct}
+                    onChange={(e) => setSelectedProduct(e.target.value)}
+                    className="flex-1 neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                  >
+                    <option value="">-- Pilih Produk --</option>
+                    {products.map((p) => (
+                      <option key={p.ID} value={p.NAMA}>
+                        {p.NAMA} ({rp(p.HARGA)})
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    type="button"
+                    onClick={() => handleAddProductToCart(selectedProduct)}
+                    disabled={!selectedProduct}
+                    className="bg-[#FFDD00] neo-border px-3 py-2 text-xs font-extrabold hover:bg-yellow-400 disabled:opacity-50"
+                  >
+                    + Tambah
+                  </button>
+                </div>
+              </div>
+
+              {/* Cart Items */}
+              <div className="neo-border p-3 bg-gray-50 flex flex-col gap-2">
+                <div className="text-xs font-bold uppercase tracking-wider border-b pb-1 flex justify-between">
+                  <span>Daftar Pesanan ({cart.length})</span>
+                  {cart.length > 0 && (
+                    <button type="button" onClick={() => setCart([])} className="text-[10px] text-red-600 hover:underline">
+                      Kosongkan
+                    </button>
+                  )}
+                </div>
+
+                {cart.length === 0 ? (
+                  <div className="text-xs text-gray-500 italic py-2 text-center">
+                    Belum ada produk dipilih.
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-2 max-h-48 overflow-y-auto pr-1">
+                    {cart.map((item) => (
+                      <div key={item.nama} className="flex items-center justify-between bg-white neo-border p-2 text-xs">
+                        <div className="flex-1 pr-2">
+                          <div className="font-bold">{item.nama}</div>
+                          <div className="text-[11px] text-gray-500 font-mono">
+                            {rp(item.harga)} x {item.qty} = {rp(item.harga * item.qty)}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateQty(item.nama, -1)}
+                            className="w-5 h-5 bg-gray-200 neo-border font-bold flex items-center justify-center hover:bg-gray-300"
+                          >
+                            -
+                          </button>
+                          <span className="w-5 text-center font-bold font-mono">{item.qty}</span>
+                          <button
+                            type="button"
+                            onClick={() => handleUpdateQty(item.nama, 1)}
+                            className="w-5 h-5 bg-gray-200 neo-border font-bold flex items-center justify-center hover:bg-gray-300"
+                          >
+                            +
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveFromCart(item.nama)}
+                            className="ml-1 text-red-600 font-bold px-1"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Total Tagihan (Rp)</label>
+                <input
+                  type="text"
+                  readOnly
+                  value={rp(totalHarga)}
+                  className="w-full neo-border px-3 py-2 text-sm bg-yellow-100 font-mono font-extrabold outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Metode Pembayaran</label>
+                <select
+                  value={metode}
+                  onChange={handleMetodeChange}
+                  className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                >
+                  <option value="Cash">Cash / Tunai</option>
+                  <option value="QRIS">QRIS</option>
+                  <option value="Transfer">Transfer Bank</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase mb-1">Uang Diterima (Rp)</label>
+                <input
+                  type="number"
+                  readOnly={metode !== 'Cash'}
+                  value={bayar}
+                  onChange={(e) => setBayar(e.target.value === '' ? '' : Number(e.target.value))}
+                  placeholder={metode === 'Cash' ? '0' : String(totalHarga)}
+                  className="w-full neo-border px-3 py-2 text-sm font-mono font-bold outline-none focus:neo-shadow bg-white"
+                />
+              </div>
+
+              <div className="bg-black text-white p-3 neo-border flex justify-between items-center">
+                <span className="text-xs font-bold uppercase">Kembalian:</span>
+                <span className="font-mono font-extrabold text-base text-[#00E5FF]">{rp(kembalian)}</span>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting || cart.length === 0}
+                className="w-full bg-[#FFDD00] neo-border neo-shadow py-2.5 text-xs font-extrabold hover:bg-yellow-400 disabled:opacity-50"
+              >
+                {isSubmitting ? 'Proses...' : 'Simpan & Cetak Struk'}
+              </button>
+            </form>
+          </div>
+
+          {/* Tabel Riwayat Kasir */}
+          <div className="lg:col-span-2">
+            <div className="bg-white neo-border neo-shadow overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="bg-black text-white font-bold uppercase">
+                    <th className="p-3">Trx / Tanggal</th>
+                    <th className="p-3">Pembeli</th>
+                    <th className="p-3">Produk</th>
+                    <th className="p-3">Total</th>
+                    <th className="p-3 text-center">Aksi</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 font-medium">
+                  {sales.length === 0 ? (
+                    <tr>
+                      <td colSpan={5} className="p-4 text-center text-gray-400">Belum ada transaksi.</td>
+                    </tr>
+                  ) : (
+                    sales.map((s) => (
+                      <tr key={s.ID} className="hover:bg-gray-50">
+                        <td className="p-3 font-mono">
+                          <div className="font-bold">{s.NO_TRANSAKSI || s.ID}</div>
+                          <div className="text-[10px] text-gray-500">{fmtDate(s.TANGGAL, true)}</div>
+                        </td>
+                        <td className="p-3 font-bold">{s.NAMA_PEMBELI}</td>
+                        <td className="p-3">{s.PRODUK}</td>
+                        <td className="p-3 font-mono font-bold">{rp(s.HARGA)}</td>
+                        <td className="p-3 text-center space-x-2">
+                          <button
+                            onClick={() => onShowReceipt(s)}
+                            className="neo-border px-2 py-1 bg-[#00E5FF] font-bold hover:bg-cyan-300"
+                          >
+                            Struk
+                          </button>
+                          <button
+                            onClick={() => onDeleteSale(s.ID)}
+                            className="neo-border px-2 py-1 bg-red-400 text-white font-bold hover:bg-red-500"
+                          >
+                            Hapus
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // AdminArusCashTab (Arus Cash Keuangan, Cash Runway, Net Profit Margin & PDF Generator)
+    function AdminArusCashTab({ sales, expenses, onSaveExpense, onDeleteExpense }) {
+      const [selectedMonth, setSelectedMonth] = useState('Semua Bulan');
+      const [formKeterangan, setFormKeterangan] = useState('');
+      const [formJumlah, setFormJumlah] = useState('');
+      const [formTanggal, setFormTanggal] = useState(() => new Date().toISOString().split('T')[0]);
+      const [editingExpenseId, setEditingExpenseId] = useState(null);
+      const [isSubmitting, setIsSubmitting] = useState(false);
+
+      const monthOptions = useMemo(() => {
+        const set = new Set([
+          'Semua Bulan',
+          'Mei 2025',
+          'April 2025',
+          'Maret 2025',
+          ...sales.map((s) => getMonthYearStr(s.TANGGAL)).filter(Boolean),
+          ...expenses.map((e) => getMonthYearStr(e.TANGGAL)).filter(Boolean),
+        ]);
+        return Array.from(set);
+      }, [sales, expenses]);
+
+      const displaySales = useMemo(() => {
+        if (!selectedMonth || selectedMonth === 'Semua Bulan') return sales;
+        return sales.filter((s) => getMonthYearStr(s.TANGGAL) === selectedMonth);
+      }, [sales, selectedMonth]);
+
+      const displayExpenses = useMemo(() => {
+        if (!selectedMonth || selectedMonth === 'Semua Bulan') return expenses;
+        return expenses.filter((e) => getMonthYearStr(e.TANGGAL) === selectedMonth);
+      }, [expenses, selectedMonth]);
+
+      const totalOmzet = useMemo(() => {
+        return displaySales.reduce((sum, s) => sum + (Number(s.HARGA) || 0), 0);
+      }, [displaySales]);
+
+      const totalPengeluaran = useMemo(() => {
+        return displayExpenses.reduce((sum, e) => sum + (Number(e.JUMLAH) || 0), 0);
+      }, [displayExpenses]);
+
+      const cashBersih = totalOmzet - totalPengeluaran;
+
+      const runwayPercentage = totalPengeluaran > 0 ? Math.min(100, Math.round((totalOmzet / totalPengeluaran) * 100)) : 100;
+
+      const expenseMonthsSet = new Set(
+        displayExpenses.map((e) => {
+          if (!e.TANGGAL) return 'default';
+          const d = new Date(e.TANGGAL);
+          return isNaN(d.getTime()) ? 'default' : `${d.getFullYear()}-${d.getMonth() + 1}`;
+        })
+      );
+      const distinctExpenseMonths = Math.max(1, expenseMonthsSet.size);
+
+      const monthlyExpense = selectedMonth && selectedMonth !== 'Semua Bulan'
+        ? totalPengeluaran
+        : totalPengeluaran > 0 ? totalPengeluaran / distinctExpenseMonths : 0;
+
+      const monthsRunway = monthlyExpense > 0 && cashBersih > 0
+        ? (cashBersih / monthlyExpense).toFixed(1)
+        : totalPengeluaran === 0 && totalOmzet > 0 ? '∞' : '0.0';
+
+      const netProfitMargin = totalOmzet > 0
+        ? ((cashBersih / totalOmzet) * 100).toFixed(1)
+        : '0.0';
+
+      const expenseRatio = totalOmzet > 0
+        ? Math.round((totalPengeluaran / totalOmzet) * 100)
+        : (totalPengeluaran > 0 ? 100 : 0);
+
+      const handleEditExpense = (exp) => {
+        setEditingExpenseId(exp.ID);
+        setFormKeterangan(exp.KETERANGAN || '');
+        setFormJumlah(exp.JUMLAH ? String(exp.JUMLAH) : '');
+        setFormTanggal(exp.TANGGAL ? new Date(exp.TANGGAL).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]);
+      };
+
+      const handleResetExpense = () => {
+        setEditingExpenseId(null);
+        setFormKeterangan('');
+        setFormJumlah('');
+        setFormTanggal(new Date().toISOString().split('T')[0]);
+      };
+
+      const handleSubmitExpense = async (e) => {
+        e.preventDefault();
+        if (!formKeterangan.trim() || !formJumlah) return;
+
+        setIsSubmitting(true);
+        try {
+          await onSaveExpense({
+            ID: editingExpenseId || undefined,
+            KETERANGAN: formKeterangan.trim(),
+            JUMLAH: Number(formJumlah),
+            TANGGAL: new Date().toISOString(),
+          });
+          handleResetExpense();
+        } finally {
+          setIsSubmitting(false);
+        }
+      };
+
+      const handleDownloadPDF = () => {
+        const printWindow = window.open('', '_blank');
+        if (!printWindow) {
+          alert('Mohon izinkan pop-up browser untuk mengunduh/mencetak laporan PDF.');
+          return;
+        }
+
+        const htmlContent = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <title>Laporan Arus Cash - Dwisyafitriproject (${selectedMonth})</title>
+            <style>
+              body { font-family: 'Arial', sans-serif; color: #000; padding: 30px; font-size: 12px; line-height: 1.5; }
+              .header { text-align: center; border-bottom: 3px solid #000; padding-bottom: 15px; margin-bottom: 20px; }
+              .header h1 { margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 1px; }
+              .header p { margin: 4px 0 0; font-size: 13px; color: #555; font-weight: bold; }
+              .meta { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: bold; border-bottom: 1px solid #ccc; padding-bottom: 8px; }
+              .cards { display: flex; gap: 15px; margin-bottom: 20px; }
+              .card { flex: 1; border: 2px solid #000; padding: 12px; background: #fafafa; border-radius: 4px; }
+              .card-title { font-size: 10px; color: #555; text-transform: uppercase; font-weight: bold; }
+              .card-value { font-size: 18px; font-weight: bold; margin-top: 5px; font-family: monospace; }
+              .table-title { font-size: 13px; font-weight: bold; margin-top: 20px; margin-bottom: 8px; border-bottom: 2px solid #000; padding-bottom: 4px; }
+              table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 11px; }
+              th { background: #000; color: #fff; text-align: left; padding: 8px; text-transform: uppercase; font-size: 10px; }
+              td { border-bottom: 1px solid #ddd; padding: 8px; }
+              .text-right { text-align: right; }
+              .footer { margin-top: 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+              .signature { text-align: center; width: 200px; }
+              .signature-line { border-bottom: 1px solid #000; margin-top: 60px; }
+              @media print { body { padding: 0; } }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1>Dwisyafitriproject</h1>
+              <p>LAPORAN ARUS CASH & KEUANGAN</p>
+            </div>
+
+            <div class="meta">
+              <span>Periode Laporan: ${selectedMonth}</span>
+              <span>Tanggal Cetak: ${new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
+            </div>
+
+            <div class="cards">
+              <div class="card">
+                <div class="card-title">Total Pemasukan (Omzet)</div>
+                <div class="card-value">${rp(totalOmzet)}</div>
+              </div>
+              <div class="card">
+                <div class="card-title">Total Pengeluaran</div>
+                <div class="card-value">${rp(totalPengeluaran)}</div>
+              </div>
+              <div class="card">
+                <div class="card-title">Cash Bersih</div>
+                <div class="card-value">${rp(cashBersih)}</div>
+              </div>
+            </div>
+
+            <div class="cards">
+              <div class="card">
+                <div class="card-title">Cash Runway</div>
+                <div class="card-value">${monthsRunway} Bulan (${runwayPercentage}%)</div>
+              </div>
+              <div class="card">
+                <div class="card-title">Net Profit Margin</div>
+                <div class="card-value">${netProfitMargin}%</div>
+              </div>
+            </div>
+
+            <div class="table-title">1. Riwayat Pemasukan (Otomatis dari Kasir)</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Keterangan</th>
+                  <th class="text-right">Jumlah (Rp)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${displaySales.length === 0 ? '<tr><td colspan="3" style="text-align:center;">Tidak ada data pemasukan.</td></tr>' : 
+                  displaySales.map(s => `
+                    <tr>
+                      <td>${fmtDate(s.TANGGAL)}</td>
+                      <td>${s.PRODUK || 'Omzet Penjualan'}</td>
+                      <td class="text-right">${(Number(s.HARGA) || 0).toLocaleString('id-ID')}</td>
+                    </tr>
+                  `).join('')
+                }
+              </tbody>
+              <tfoot>
+                <tr style="font-weight:bold; background:#f0f0f0;">
+                  <td colspan="2">Total Pemasukan</td>
+                  <td class="text-right">${totalOmzet.toLocaleString('id-ID')}</td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <div class="table-title">2. Riwayat Pengeluaran</div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Tanggal</th>
+                  <th>Keterangan</th>
+                  <th class="text-right">Jumlah (Rp)</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${displayExpenses.length === 0 ? '<tr><td colspan="3" style="text-align:center;">Tidak ada data pengeluaran.</td></tr>' : 
+                  displayExpenses.map(e => `
+                    <tr>
+                      <td>${fmtDate(e.TANGGAL)}</td>
+                      <td>${e.KETERANGAN}</td>
+                      <td class="text-right">${(Number(e.JUMLAH) || 0).toLocaleString('id-ID')}</td>
+                    </tr>
+                  `).join('')
+                }
+              </tbody>
+              <tfoot>
+                <tr style="font-weight:bold; background:#f0f0f0;">
+                  <td colspan="2">Total Pengeluaran</td>
+                  <td class="text-right">${totalPengeluaran.toLocaleString('id-ID')}</td>
+                </tr>
+              </tfoot>
+            </table>
+
+            <div class="footer">
+              <div>
+                <p style="font-size: 10px; color: #888;">* Laporan ini di-generate secara otomatis oleh Sistem Kasir Dwisyafitriproject.</p>
+              </div>
+              <div class="signature">
+                <p>Pemilik / Admin Toko,</p>
+                <div class="signature-line"></div>
+                <p style="margin-top: 5px; font-weight: bold;">( Admin Toko )</p>
+              </div>
+            </div>
+
+            <script>
+              window.onload = function() {
+                window.print();
+              };
+            <\/script>
+          </body>
+          </html>
+        `;
+
+        printWindow.document.open();
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+      };
+
+      return (
+        <div className="space-y-6">
+          {/* Header & Filter */}
+          <div className="flex flex-wrap items-center justify-between gap-4 bg-white neo-border p-5 neo-shadow">
+            <div>
+              <h3 className="font-extrabold text-lg text-black">Arus Cash & Laporan Keuangan</h3>
+              <p className="text-xs text-gray-600 font-medium mt-0.5">
+                Pantau kesehatan modal, cash runway, net profit, serta unduh laporan PDF resmi.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 bg-[#FFFBCC] neo-border px-3 py-1.5">
+                <span className="font-extrabold text-xs uppercase">Bulan:</span>
+                <select
+                  value={selectedMonth}
+                  onChange={(e) => setSelectedMonth(e.target.value)}
+                  className="bg-transparent font-extrabold text-xs outline-none cursor-pointer"
+                >
+                  {monthOptions.map((m) => (
+                    <option key={m} value={m}>{m}</option>
+                  ))}
+                </select>
+              </div>
+
+              <button
+                onClick={handleDownloadPDF}
+                className="bg-[#00E5FF] neo-border neo-shadow-sm px-4 py-2 text-xs font-extrabold hover:bg-cyan-300 hover:neo-shadow active:translate-x-0.5 active:translate-y-0.5"
+              >
+                📄 Unduh Laporan PDF
+              </button>
+            </div>
+          </div>
+
+          {/* Top Metric Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-white neo-border p-4 neo-shadow relative overflow-hidden">
+              <div className="flex justify-between items-start">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-500">Total Omzet (Pemasukan)</span>
+                <span className="bg-[#00E5A0] neo-border text-[9px] font-extrabold px-1.5 py-0.5">Penjualan</span>
+              </div>
+              <div className="text-2xl font-black font-mono mt-2 text-black">{rp(totalOmzet)}</div>
+            </div>
+
+            <div className="bg-white neo-border p-4 neo-shadow relative overflow-hidden">
+              <div className="flex justify-between items-start">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-gray-500">Total Pengeluaran</span>
+                <span className="bg-[#FF3B30] text-white neo-border text-[9px] font-extrabold px-1.5 py-0.5">Beban</span>
+              </div>
+              <div className="text-2xl font-black font-mono mt-2 text-[#FF3B30]">{rp(totalPengeluaran)}</div>
+            </div>
+
+            <div className="bg-[#FFDD00] neo-border p-4 neo-shadow relative overflow-hidden">
+              <div className="flex justify-between items-start">
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-black">Cash Bersih (Sisa)</span>
+                <span className="bg-black text-[#FFDD00] neo-border text-[9px] font-extrabold px-1.5 py-0.5">Nett</span>
+              </div>
+              <div className="text-2xl font-black font-mono mt-2 text-black">{rp(cashBersih)}</div>
+            </div>
+          </div>
+
+          {/* Key Analytics Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* 1. Cash Runway Circular Gauge */}
+            <div className="bg-white neo-border p-5 neo-shadow flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-black">Cash Runway</span>
+                  <span className="bg-[#FFDD00] neo-border text-[10px] font-black px-2 py-0.5">
+                    {runwayPercentage}% Aman
+                  </span>
+                </div>
+                <p className="text-[11px] text-gray-600 font-medium leading-tight">
+                  Estimasi durasi toko dapat bertahan beroperasi berdasarkan rata-rata pengeluaran bulanan.
+                </p>
+              </div>
+
+              <div className="my-4 flex items-center justify-center relative">
+                <svg className="w-32 h-32 transform -rotate-90">
+                  <circle cx="64" cy="64" r="50" stroke="#E5E7EB" strokeWidth="12" fill="transparent" />
+                  <circle
+                    cx="64"
+                    cy="64"
+                    r="50"
+                    stroke="#FFDD00"
+                    strokeWidth="12"
+                    fill="transparent"
+                    strokeDasharray={314}
+                    strokeDashoffset={314 - (314 * Math.min(100, runwayPercentage)) / 100}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                  <span className="text-2xl font-black font-mono text-black">{monthsRunway}</span>
+                  <span className="text-[10px] font-bold text-gray-500 uppercase">Bulan</span>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 neo-border p-2.5 text-center">
+                <span className="text-[10px] font-bold text-gray-600">Rata-rata Beban: </span>
+                <span className="text-xs font-mono font-bold text-black">{rp(monthlyExpense)}/bln</span>
+              </div>
+            </div>
+
+            {/* 2. Net Profit Margin Ring */}
+            <div className="bg-white neo-border p-5 neo-shadow flex flex-col justify-between">
+              <div>
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-xs font-black uppercase tracking-wider text-black">Net Profit Margin</span>
+                  <span className="bg-[#00E5FF] neo-border text-[10px] font-black px-2 py-0.5">
+                    {netProfitMargin}% Margin
+                  </span>
+                </div>
+                <p className="text-[11px] text-gray-600 font-medium leading-tight">
+                  Persentase laba bersih yang didapat dari setiap omzet pendapatan yang masuk.
+                </p>
+              </div>
+
+              <div className="my-4 flex items-center justify-center relative">
+                <svg className="w-32 h-32 transform -rotate-90">
+                  <circle cx="64" cy="64" r="50" stroke="#E5E7EB" strokeWidth="12" fill="transparent" />
+                  <circle
+                    cx="64"
+                    cy="64"
+                    r="50"
+                    stroke="#00E5FF"
+                    strokeWidth="12"
+                    fill="transparent"
+                    strokeDasharray={314}
+                    strokeDashoffset={314 - (314 * Math.max(0, Math.min(100, Number(netProfitMargin)))) / 100}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+                  <span className="text-2xl font-black font-mono text-black">{netProfitMargin}%</span>
+                  <span className="text-[10px] font-bold text-gray-500 uppercase">Profit</span>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 neo-border p-2.5 text-center">
+                <span className="text-[10px] font-bold text-gray-600">Laba per Rp 100 Omzet: </span>
+                <span className="text-xs font-mono font-bold text-black">Rp {Math.max(0, Number(netProfitMargin)).toFixed(0)}</span>
+              </div>
+            </div>
+
+            {/* 3. Warning Card */}
+            <div className="bg-[#FF3B30] text-white neo-border p-5 neo-shadow flex flex-col justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xl">⚠️</span>
+                  <span className="text-sm font-black uppercase tracking-wider">PERINGATAN!</span>
+                </div>
+                <p className="text-xs text-white/90 font-medium leading-relaxed mt-2">
+                  {expenseRatio >= 80 ? (
+                    <>
+                      <strong>Beban Operasional Sangat Tinggi!</strong> Rasio pengeluaran Anda mencapai <strong>{expenseRatio}%</strong> dari total omzet. Harap kendalikan biaya operasional untuk menjaga arus kas tetap aman.
+                    </>
+                  ) : expenseRatio >= 50 ? (
+                    <>
+                      <strong>Pengeluaran Mencapai {expenseRatio}%</strong> dari omzet. Pertahankan tingkat penjualan dan cermati pengeluaran opsional Anda.
+                    </>
+                  ) : (
+                    <>
+                      <strong>Kondisi Arus Cash Sehat.</strong> Rasio pengeluaran toko berada di angka <strong>{expenseRatio}%</strong>. Pertahankan efisiensi operasional usaha Anda!
+                    </>
+                  )}
+                </p>
+              </div>
+
+              <div className="bg-black/20 neo-border p-3 mt-4">
+                <div className="text-[10px] font-extrabold uppercase tracking-wider text-white/80">Rasio Beban terhadap Omzet</div>
+                <div className="text-xl font-black font-mono text-white mt-1">{expenseRatio}%</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Record Expense Form & Tables */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Form Tambah/Edit Pengeluaran */}
+            <div className="bg-white neo-border neo-shadow p-6 h-fit space-y-4">
+              <h3 className="font-black text-lg border-b-2 border-black pb-2 text-black">
+                {editingExpenseId ? `Edit Pengeluaran #${editingExpenseId}` : 'Catat Pengeluaran Baru'}
+              </h3>
+
+              <form onSubmit={handleSubmitExpense} className="space-y-4">
+                <div>
+                  <label className="block text-xs font-bold uppercase mb-1 text-black">
+                    Tanggal Pengeluaran *
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={formTanggal}
+                    onChange={(e) => setFormTanggal(e.target.value)}
+                    className="w-full neo-border px-3 py-2 text-xs bg-white font-bold outline-none focus:neo-shadow"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase mb-1 text-black">
+                    Keterangan / Keperluan *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formKeterangan}
+                    onChange={(e) => setFormKeterangan(e.target.value)}
+                    placeholder="Contoh: Pembelian Bahan Baku Kopi"
+                    className="w-full neo-border px-3 py-2 text-xs bg-white font-bold outline-none focus:neo-shadow"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold uppercase mb-1 text-black">
+                    Jumlah Pengeluaran (Rp) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    min="1"
+                    value={formJumlah}
+                    onChange={(e) => setFormJumlah(e.target.value)}
+                    placeholder="150000"
+                    className="w-full neo-border px-3 py-2 text-xs bg-white font-mono font-bold outline-none focus:neo-shadow"
+                  />
+                </div>
+
+                <div className="flex gap-2 pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 bg-[#FF3B30] text-white neo-border neo-shadow py-2.5 text-xs font-extrabold hover:bg-red-600 disabled:opacity-50"
+                  >
+                    {isSubmitting ? 'Menyimpan...' : editingExpenseId ? 'Update' : 'Tambah Pengeluaran'}
+                  </button>
+                  {editingExpenseId && (
+                    <button
+                      type="button"
+                      onClick={handleResetExpense}
+                      className="neo-border px-3 py-2.5 text-xs font-extrabold bg-gray-100 hover:bg-gray-200"
+                    >
+                      Batal
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+
+            {/* Tables Area */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Table Pemasukan */}
+              <div className="bg-white neo-border neo-shadow overflow-hidden">
+                <div className="p-3 bg-black text-[#FFDD00] font-black text-xs uppercase flex justify-between items-center">
+                  <span>1. Riwayat Pemasukan ({selectedMonth})</span>
+                  <span className="font-mono text-white">{rp(totalOmzet)}</span>
+                </div>
+                <div className="overflow-x-auto max-h-60 overflow-y-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead className="bg-gray-100 border-b-2 border-black font-bold uppercase sticky top-0">
+                      <tr>
+                        <th className="p-2.5">Tanggal</th>
+                        <th className="p-2.5">Keterangan / Detail</th>
+                        <th className="p-2.5 text-right">Jumlah (Rp)</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 font-medium">
+                      {displaySales.length === 0 ? (
+                        <tr>
+                          <td colSpan={3} className="p-4 text-center text-gray-400">Tidak ada data pemasukan.</td>
+                        </tr>
+                      ) : (
+                        displaySales.map((s) => (
+                          <tr key={s.ID} className="hover:bg-green-50">
+                            <td className="p-2.5 font-mono text-gray-600">{fmtDate(s.TANGGAL)}</td>
+                            <td className="p-2.5 font-bold text-black">{s.PRODUK || 'Penjualan Kasir'}</td>
+                            <td className="p-2.5 text-right font-mono text-green-600 font-bold">{rp(s.HARGA)}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Table Pengeluaran */}
+              <div className="bg-white neo-border neo-shadow overflow-hidden">
+                <div className="p-3 bg-black text-[#FF3B30] font-black text-xs uppercase flex justify-between items-center">
+                  <span>2. Riwayat Pengeluaran ({selectedMonth})</span>
+                  <span className="font-mono text-white">{rp(totalPengeluaran)}</span>
+                </div>
+                <div className="overflow-x-auto max-h-60 overflow-y-auto">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead className="bg-gray-100 border-b-2 border-black font-bold uppercase sticky top-0">
+                      <tr>
+                        <th className="p-2.5">Tanggal</th>
+                        <th className="p-2.5">Keterangan</th>
+                        <th className="p-2.5 text-right">Jumlah (Rp)</th>
+                        <th className="p-2.5 text-center">Aksi</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200 font-medium">
+                      {displayExpenses.length === 0 ? (
+                        <tr>
+                          <td colSpan={4} className="p-4 text-center text-gray-400">Belum ada data pengeluaran.</td>
+                        </tr>
+                      ) : (
+                        displayExpenses.map((e) => (
+                          <tr key={e.ID} className="hover:bg-red-50">
+                            <td className="p-2.5 font-mono text-gray-600">{fmtDate(e.TANGGAL)}</td>
+                            <td className="p-2.5 font-bold text-black">{e.KETERANGAN}</td>
+                            <td className="p-2.5 text-right font-mono text-red-600 font-bold">{rp(e.JUMLAH)}</td>
+                            <td className="p-2.5 text-center space-x-1">
+                              <button
+                                onClick={() => handleEditExpense(e)}
+                                className="neo-border px-2 py-0.5 bg-yellow-300 font-bold hover:bg-yellow-400"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => onDeleteExpense(e.ID)}
+                                className="neo-border px-2 py-0.5 bg-red-400 text-white font-bold hover:bg-red-500"
+                              >
+                                Hapus
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // AdminUlasanTab
+    function AdminUlasanTab({ reviews, onUpdateReview, onDeleteReview }) {
+      const [modalOpen, setModalOpen] = useState(false);
+      const [editingId, setEditingId] = useState(null);
+      const [nama, setNama] = useState('');
+      const [wa, setWa] = useState('');
+      const [rating, setRating] = useState(5);
+      const [text, setText] = useState('');
+      const [isSaving, setIsSaving] = useState(false);
+
+      const handleOpenEdit = (r) => {
+        setEditingId(r.ID);
+        setNama(r.NAMA || '');
+        setWa(r.WHATSAPP || '');
+        setRating(Number(r.RATING) || 5);
+        setText(r.REVIEW || '');
+        setModalOpen(true);
+      };
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (!editingId || !nama.trim() || !text.trim()) return;
+
+        setIsSaving(true);
+        try {
+          const ok = await onUpdateReview({
+            ID: editingId,
+            NAMA: nama.trim(),
+            WHATSAPP: wa.trim(),
+            RATING: rating,
+            REVIEW: text.trim(),
+          });
+          if (ok !== false) {
+            setModalOpen(false);
+          }
+        } finally {
+          setIsSaving(false);
+        }
+      };
+
+      return (
+        <div className="space-y-6">
+          <div className="bg-white neo-border p-5 neo-shadow">
+            <h3 className="font-extrabold text-lg text-black">Kelola & Moderasi Ulasan</h3>
+            <p className="text-xs text-gray-600 font-medium mt-0.5">
+              Edit, hapus, atau tinjau ulasan pembeli toko Anda.
+            </p>
+          </div>
+
+          <div className="bg-white neo-border neo-shadow overflow-x-auto">
+            <table className="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr className="bg-black text-[#FFDD00] font-bold uppercase">
+                  <th className="p-3">Tanggal</th>
+                  <th className="p-3">Pembeli</th>
+                  <th className="p-3">Rating</th>
+                  <th className="p-3">Ulasan</th>
+                  <th className="p-3 text-center">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 font-medium">
+                {reviews.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} className="p-4 text-center text-gray-400 font-bold">Belum ada ulasan dari pembeli.</td>
+                  </tr>
+                ) : (
+                  reviews.map((r) => (
+                    <tr key={r.ID} className="hover:bg-yellow-50">
+                      <td className="p-3 font-mono text-gray-600 whitespace-nowrap">
+                        {fmtDate(r.TANGGAL)}
+                      </td>
+                      <td className="p-3 whitespace-nowrap">
+                        <div className="font-extrabold text-sm text-black">{r.NAMA}</div>
+                        {r.WHATSAPP && (
+                          <div className="text-[10px] font-mono text-gray-500">+{r.WHATSAPP}</div>
+                        )}
+                      </td>
+                      <td className="p-3 whitespace-nowrap text-yellow-500 font-bold text-sm">
+                        {'★'.repeat(Number(r.RATING) || 5)}
+                      </td>
+                      <td className="p-3 max-w-xs truncate text-gray-800 font-medium">{r.REVIEW}</td>
+                      <td className="p-3 text-center space-x-2 whitespace-nowrap">
+                        <button
+                          onClick={() => handleOpenEdit(r)}
+                          className="neo-border px-2.5 py-1 bg-yellow-300 font-bold hover:bg-yellow-400"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => onDeleteReview(r.ID)}
+                          className="neo-border px-2.5 py-1 bg-red-400 text-white font-bold hover:bg-red-500"
+                        >
+                          Hapus
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Edit Review Modal */}
+          {modalOpen && (
+            <div className="fixed inset-0 z-[500] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+              <div className="bg-white neo-border-3 neo-shadow-lg w-full max-w-md">
+                <div className="p-4 border-b-2 border-black flex items-center justify-between">
+                  <h3 className="font-extrabold text-lg text-black">Edit Ulasan Pembeli</h3>
+                  <button
+                    onClick={() => setModalOpen(false)}
+                    className="w-8 h-8 bg-black text-[#FFDD00] neo-border flex items-center justify-center font-bold"
+                  >
+                    ✕
+                  </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="p-6 space-y-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase mb-1 text-black">Nama Pembeli</label>
+                    <input
+                      type="text"
+                      required
+                      value={nama}
+                      onChange={(e) => setNama(e.target.value)}
+                      className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase mb-1 text-black">WhatsApp</label>
+                    <input
+                      type="text"
+                      value={wa}
+                      onChange={(e) => setWa(cleanWaInput(e.target.value))}
+                      className="w-full neo-border px-3 py-2 text-sm bg-white font-mono font-bold outline-none focus:neo-shadow"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase mb-1 text-black">Rating (1–5)</label>
+                    <div className="flex gap-2">
+                      {[1, 2, 3, 4, 5].map((starVal) => (
+                        <button
+                          key={starVal}
+                          type="button"
+                          onClick={() => setRating(starVal)}
+                          className="text-2xl hover:scale-125 transition-transform"
+                        >
+                          <span className={starVal <= rating ? 'text-[#FFDD00]' : 'text-gray-300'}>★</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold uppercase mb-1 text-black">Teks Ulasan</label>
+                    <textarea
+                      rows={3}
+                      required
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
+                      className="w-full neo-border p-3 text-sm bg-white font-medium outline-none focus:neo-shadow resize-y"
+                    />
+                  </div>
+
+                  <div className="pt-3 border-t-2 border-black flex justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setModalOpen(false)}
+                      className="px-4 py-2 neo-border font-bold text-sm bg-white hover:bg-gray-100"
+                    >
+                      Batal
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={isSaving}
+                      className="px-4 py-2 neo-border font-extrabold text-sm bg-[#FFDD00] text-black neo-shadow-sm hover:neo-shadow"
+                    >
+                      {isSaving ? 'Menyimpan...' : 'Simpan Ulasan'}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // AdminDashboard
+    function AdminDashboard({
+      products,
+      sales,
+      expenses,
+      reviews,
+      onSaveProduct,
+      onDeleteProduct,
+      onSaveSale,
+      onDeleteSale,
+      onSaveExpense,
+      onDeleteExpense,
+      onUpdateReview,
+      onDeleteReview,
+      onShowReceipt,
+    }) {
+      const [activeTab, setActiveTab] = useState('kasir');
+
+      return (
+        <div className="max-w-7xl mx-auto px-4 py-6 w-full">
+          <div className="flex flex-wrap items-center gap-2 mb-6 border-b-2 border-black pb-3">
+            <button
+              onClick={() => setActiveTab('kasir')}
+              className={`neo-border px-4 py-2 text-xs font-extrabold uppercase transition-all ${
+                activeTab === 'kasir' ? 'bg-[#FFDD00] neo-shadow-sm' : 'bg-white hover:bg-gray-100'
+              }`}
+            >
+              ⌁ Kasir POS
+            </button>
+            <button
+              onClick={() => setActiveTab('aruscash')}
+              className={`neo-border px-4 py-2 text-xs font-extrabold uppercase transition-all ${
+                activeTab === 'aruscash' ? 'bg-[#FFDD00] neo-shadow-sm' : 'bg-white hover:bg-gray-100'
+              }`}
+            >
+              💰 Arus Cash Keuangan
+            </button>
+            <button
+              onClick={() => setActiveTab('produk')}
+              className={`neo-border px-4 py-2 text-xs font-extrabold uppercase transition-all ${
+                activeTab === 'produk' ? 'bg-[#FFDD00] neo-shadow-sm' : 'bg-white hover:bg-gray-100'
+              }`}
+            >
+              📦 Kelola Produk
+            </button>
+            <button
+              onClick={() => setActiveTab('ulasan')}
+              className={`neo-border px-4 py-2 text-xs font-extrabold uppercase transition-all ${
+                activeTab === 'ulasan' ? 'bg-[#FFDD00] neo-shadow-sm' : 'bg-white hover:bg-gray-100'
+              }`}
+            >
+              ⭐ Kelola Ulasan
+            </button>
+          </div>
+
+          {activeTab === 'kasir' && (
+            <AdminKasirTab
+              products={products}
+              sales={sales}
+              onSaveSale={onSaveSale}
+              onDeleteSale={onDeleteSale}
+              onShowReceipt={onShowReceipt}
+            />
+          )}
+
+          {activeTab === 'aruscash' && (
+            <AdminArusCashTab
+              sales={sales}
+              expenses={expenses}
+              onSaveExpense={onSaveExpense}
+              onDeleteExpense={onDeleteExpense}
+            />
+          )}
+
+          {activeTab === 'produk' && (
+            <AdminProdukTab
+              products={products}
+              onSaveProduct={onSaveProduct}
+              onDeleteProduct={onDeleteProduct}
+            />
+          )}
+
+          {activeTab === 'ulasan' && (
+            <AdminUlasanTab
+              reviews={reviews}
+              onUpdateReview={onUpdateReview}
+              onDeleteReview={onDeleteReview}
+            />
+          )}
+        </div>
+      );
+    }
+
+    // MAIN APP COMPONENT
+    function App() {
+      const [currentPage, setCurrentPage] = useState('katalog');
+      const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+      const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+      
+      const [products, setProducts] = useState([]);
+      const [sales, setSales] = useState([]);
+      const [expenses, setExpenses] = useState([]);
+      const [reviews, setReviews] = useState([]);
+
+      const [isLoading, setIsLoading] = useState(true);
+      const [toast, setToast] = useState(null);
+
+      const [receiptSale, setReceiptSale] = useState(null);
+      const [confirmConfig, setConfirmConfig] = useState(null);
+
+      const showToast = (message, type = 'success') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 3500);
+      };
+
+      const loadInitialData = async () => {
+        setIsLoading(true);
+        try {
+          const [resP, resS, resE, resR] = await Promise.all([
+            gasCall('getProduk'),
+            gasCall('getPenjualan'),
+            gasCall('getPengeluaran'),
+            gasCall('getReview'),
+          ]);
+
+          if (resP && resP.data) setProducts(resP.data);
+          if (resS && resS.data) setSales(resS.data);
+          if (resE && resE.data) setExpenses(resE.data);
+          if (resR && resR.data) setReviews(resR.data);
+        } catch (e) {
+          console.error('Error loading data:', e);
+          } finally {
+          setIsLoading(false);
+        }
+      };
+
+      useEffect(() => {
+        loadInitialData();
+      }, []);
+
+      // Handlers Produk
+      const handleSaveProduct = async (p) => {
+        const res = await gasCall('saveProduk', p);
+        if (res && res.data) {
+          setProducts(res.data);
+          showToast('Produk berhasil disimpan!');
+          return true;
+        } else {
+          showToast(res?.message || 'Gagal menyimpan produk', 'error');
+          return false;
+        }
+      };
+
+      const handleDeleteProduct = (id) => {
+        setConfirmConfig({
+          isOpen: true,
+          title: 'Hapus Produk',
+          message: 'Apakah Anda yakin ingin menghapus produk ini?',
+          onConfirm: async () => {
+            setConfirmConfig(null);
+            const res = await gasCall('deleteProduk', { ID: id });
+            if (res && res.data) {
+              setProducts(res.data);
+              showToast('Produk berhasil dihapus');
+            } else {
+              showToast('Gagal menghapus produk', 'error');
+            }
+          },
+        });
+      };
+
+      // Handlers Penjualan
+      const handleSaveSale = async (s) => {
+        const res = await gasCall('savePenjualan', s);
+        if (res && res.data) {
+          setSales(res.data);
+          showToast('Transaksi berhasil disimpan!');
+          const savedItem = res.data.find((x) => x.NAMA_PEMBELI === s.NAMA_PEMBELI && x.HARGA === s.HARGA) || s;
+          return savedItem;
+        } else {
+          showToast(res?.message || 'Gagal menyimpan transaksi', 'error');
+          return null;
+        }
+      };
+
+      const handleDeleteSale = (id) => {
+        setConfirmConfig({
+          isOpen: true,
+          title: 'Hapus Transaksi',
+          message: 'Apakah Anda yakin ingin menghapus data transaksi ini?',
+          onConfirm: async () => {
+            setConfirmConfig(null);
+            const res = await gasCall('deletePenjualan', { ID: id });
+            if (res && res.data) {
+              setSales(res.data);
+              showToast('Transaksi berhasil dihapus');
+            } else {
+              showToast('Gagal menghapus transaksi', 'error');
+            }
+          },
+        });
+      };
+
+      // Handlers Pengeluaran
+      const handleSaveExpense = async (e) => {
+        const res = await gasCall('savePengeluaran', e);
+        if (res && res.data) {
+          setExpenses(res.data);
+          showToast('Pengeluaran berhasil dicatat!');
+          return true;
+        } else {
+          showToast(res?.message || 'Gagal mencatat pengeluaran', 'error');
+          return false;
+        }
+      };
+
+      const handleDeleteExpense = (id) => {
+        setConfirmConfig({
+          isOpen: true,
+          title: 'Hapus Pengeluaran',
+          message: 'Apakah Anda yakin ingin menghapus data pengeluaran ini?',
+          onConfirm: async () => {
+            setConfirmConfig(null);
+            const res = await gasCall('deletePengeluaran', { ID: id });
+            if (res && res.data) {
+              setExpenses(res.data);
+              showToast('Pengeluaran berhasil dihapus');
+            } else {
+              showToast('Gagal menghapus pengeluaran', 'error');
+            }
+          },
+        });
+      };
+
+      // Handlers Review
+      const handleAddReview = async (r) => {
+        const res = await gasCall('addReview', r);
+        if (res && res.data) {
+          setReviews(res.data);
+          showToast('Terima kasih atas ulasan Anda!');
+        } else {
+          showToast(res?.message || 'Gagal mengirim ulasan', 'error');
+        }
+      };
+
+      const handleUpdateReview = async (r) => {
+        const res = await gasCall('updateReview', r);
+        if (res && res.data) {
+          setReviews(res.data);
+          showToast('Ulasan berhasil diperbarui!');
+          return true;
+        } else {
+          showToast(res?.message || 'Gagal memperbarui ulasan', 'error');
+          return false;
+        }
+      };
+
+      const handleDeleteReview = (id) => {
+        setConfirmConfig({
+          isOpen: true,
+          title: 'Hapus Ulasan',
+          message: 'Apakah Anda yakin ingin menghapus ulasan ini?',
+          onConfirm: async () => {
+            setConfirmConfig(null);
+            const res = await gasCall('deleteReview', { ID: id });
+            if (res && res.data) {
+              setReviews(res.data);
+              showToast('Ulasan berhasil dihapus');
+            } else {
+              showToast('Gagal menghapus ulasan', 'error');
+            }
+          },
+        });
+      };
+
+      return (
+        <div className="min-h-screen flex flex-col bg-[#F5F5F5]">
+          <Header
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            isAdminLoggedIn={isAdminLoggedIn}
+            onOpenLogin={() => setIsLoginModalOpen(true)}
+            onLogout={() => {
+              setIsAdminLoggedIn(false);
+              setCurrentPage('katalog');
+              showToast('Logout Admin berhasil');
+            }}
+          />
+
+          <main className="flex-1 flex flex-col">
+            {currentPage === 'katalog' && (
+              <KatalogPage products={products} isLoading={isLoading} />
+            )}
+
+            {currentPage === 'ulasan' && (
+              <UlasanPage
+                reviews={reviews}
+                onAddReview={handleAddReview}
+                isLoading={isLoading}
+              />
+            )}
+
+            {currentPage === 'admin' && (
+              isAdminLoggedIn ? (
+                <AdminDashboard
+                  products={products}
+                  sales={sales}
+                  expenses={expenses}
+                  reviews={reviews}
+                  onSaveProduct={handleSaveProduct}
+                  onDeleteProduct={handleDeleteProduct}
+                  onSaveSale={handleSaveSale}
+                  onDeleteSale={handleDeleteSale}
+                  onSaveExpense={handleSaveExpense}
+                  onDeleteExpense={handleDeleteExpense}
+                  onUpdateReview={handleUpdateReview}
+                  onDeleteReview={handleDeleteReview}
+                  onShowReceipt={(s) => setReceiptSale(s)}
+                />
+              ) : (
+                <div className="max-w-md mx-auto my-12 p-6 bg-white neo-border neo-shadow text-center">
+                  <p className="font-extrabold mb-4">Silakan login admin untuk mengakses halaman ini.</p>
+                  <button
+                    onClick={() => setIsLoginModalOpen(true)}
+                    className="bg-[#00E5FF] neo-border neo-shadow px-6 py-2.5 font-extrabold text-xs"
+                  >
+                    Login Admin Sekarang
+                  </button>
+                </div>
+              )
+            )}
+          </main>
+
+          <Footer />
+
+          {/* Modal & Toast Overlays */}
+          <AdminLogin
+            isOpen={isLoginModalOpen}
+            onClose={() => setIsLoginModalOpen(false)}
+            onLoginSuccess={() => {
+              setIsAdminLoggedIn(true);
+              setCurrentPage('admin');
+            }}
+            showToast={showToast}
+          />
+
+          <StrukModal
+            isOpen={!!receiptSale}
+            sale={receiptSale}
+            onClose={() => setReceiptSale(null)}
+          />
+
+          <ConfirmModal
+            isOpen={!!confirmConfig?.isOpen}
+            title={confirmConfig?.title}
+            message={confirmConfig?.message}
+            onConfirm={confirmConfig?.onConfirm}
+            onCancel={() => setConfirmConfig(null)}
+          />
+
+          <Toast toast={toast} />
+        </div>
+      );
+    }
+
+    // Render App ke Element DOM #root
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+
+  <!-- Script Module untuk Vite Dev Environment -->
+  <script type="module">
+    // Vite loader fallback jika dijalankan di Node/Vite preview container
+    if (typeof window.React === 'undefined') {
+      import('/src/main.tsx');
+    }
+  </script>
+</body>
+</html>
