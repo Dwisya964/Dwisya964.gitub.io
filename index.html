@@ -1010,20 +1010,79 @@ function gasCall(action, payload) {
       );
     }
 
-    // KatalogPage
-    function KatalogPage({ products, isLoading }) {
-      const [selectedProduct, setSelectedProduct] = useState(null);
-      const [searchQuery, setSearchQuery] = useState('');
+   // KatalogPage (Sudah diperbaiki & aman jika data null/undefined)
+function KatalogPage({ products = [], isLoading }) {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
-      const displayedProducts = useMemo(() => {
-        return products.filter((p) => {
-          const isShown = p.STATUS !== 'disembunyikan';
-          const matchSearch = p.NAMA.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            p.DESKRIPSI?.toLowerCase().includes(searchQuery.toLowerCase());
-          return isShown && matchSearch;
-        });
-      }, [products, searchQuery]);
+  // Filter produk dengan validasi keamanan data
+  const displayedProducts = useMemo(() => {
+    if (!Array.isArray(products)) return [];
 
+    const query = searchQuery.toLowerCase().trim();
+    return products.filter((p) => {
+      if (!p) return false;
+
+      // Cek status produk
+      const status = String(p.status || p.STATUS || '').toLowerCase();
+      const isShown = status !== 'disembunyikan';
+
+      // Cek pencarian kata kunci di Nama atau Deskripsi
+      const nama = String(p.nama || p.NAMA || '').toLowerCase();
+      const deskripsi = String(p.deskripsi || p.DESKRIPSI || '').toLowerCase();
+      const matchSearch = nama.includes(query) || deskripsi.includes(query);
+
+      return isShown && matchSearch;
+    });
+  }, [products, searchQuery]);
+
+  return (
+    <div className="katalog-container">
+      {/* Header & Search Bar */}
+      <div className="search-box">
+        <input
+          type="text"
+          placeholder="Cari produk..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
+      {/* Kondisi Loading & Tampilan Produk */}
+      {isLoading ? (
+        <div className="loading-state">
+          <p>Memuat produk...</p>
+        </div>
+      ) : displayedProducts.length === 0 ? (
+        <div className="empty-state">
+          <p>Produk tidak ditemukan.</p>
+        </div>
+      ) : (
+        <div className="product-grid">
+          {displayedProducts.map((product, index) => (
+            <div
+              key={product.id || product.ID || index}
+              className="product-card"
+              onClick={() => setSelectedProduct(product)}
+            >
+              <img
+                src={
+                  (product.imageUrls && product.imageUrls[0]) ||
+                  product.ImageUrl1 ||
+                  'https://via.placeholder.com/300'
+                }
+                alt={product.nama || product.NAMA}
+                loading="lazy"
+              />
+              <h3>{product.nama || product.NAMA}</h3>
+              <p>{product.deskripsi || product.DESKRIPSI}</p>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
       const handlePesanWa = (p) => {
         const text = `Halo Admin Dwisyafitriproject, saya ingin memesan produk:\n*${p.NAMA}* (${rp(p.HARGA)})\nApakah stok tersedia? Terima kasih!`;
         window.open(`https://wa.me/6288289369002?text=${encodeURIComponent(text)}`, '_blank');
@@ -2865,9 +2924,47 @@ function gasCall(action, payload) {
         }
       };
 
-      useEffect(() => {
-        loadInitialData();
-      }, []);
+      const loadInitialData = async () => {
+  // 1. Ambil data dari LocalStorage (Cache) lebih dulu
+  const cachedData = localStorage.getItem('cached_portfolio_data');
+  
+  if (cachedData) {
+    try {
+      const parsed = JSON.parse(cachedData);
+      // Tampilkan data produk/proyek secara INSTAN dari memori browser
+      setProducts(parsed.projects || parsed || []); 
+      setIsLoading(false); // Langsung hilangkan pesan "Memuat produk..."
+    } catch (e) {
+      console.error('Gagal membaca cache:', e);
+    }
+  } else {
+    // Jika belum ada cache sama sekali (pertama kali buka), baru tampilkan spinner/loading
+    setIsLoading(true);
+  }
+
+  // 2. Minta data paling baru dari Google Apps Script di latar belakang (Background)
+  try {
+    const response = await fetch(GAS_WEB_APP_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'getPortfolioData' })
+    });
+    
+    const result = await response.json();
+    
+    // Perbarui state dengan data terbaru dari Google Sheets
+    const freshProducts = result.projects || [];
+    setProducts(freshProducts);
+    
+    // Simpan data terbaru ke LocalStorage untuk kunjungan berikutnya
+    localStorage.getItem('cached_portfolio_data', JSON.stringify(result));
+    
+  } catch (error) {
+    console.error('Gagal sinkronisasi data dari backend:', error);
+  } finally {
+    // Pastikan loading benar-benar selesai
+    setIsLoading(false);
+  }
+};
 
       // Handlers Produk
       const handleSaveProduct = async (p) => {
