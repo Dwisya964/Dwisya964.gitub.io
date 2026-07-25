@@ -2931,18 +2931,19 @@ function KatalogPage({ products = [], isLoading }) {
   if (cachedData) {
     try {
       const parsed = JSON.parse(cachedData);
-      // Tampilkan data produk/proyek secara INSTAN dari memori browser
+      // Tampilkan data produk secara INSTAN dari memori browser
       setProducts(parsed.projects || parsed || []); 
-      setIsLoading(false); // Langsung hilangkan pesan "Memuat produk..."
+      setIsLoading(false); // Hilangkan pesan "Memuat produk..." seketika
     } catch (e) {
       console.error('Gagal membaca cache:', e);
+      setIsLoading(true);
     }
   } else {
-    // Jika belum ada cache sama sekali (pertama kali buka), baru tampilkan spinner/loading
+    // Jika belum ada cache sama sekali (baru pertama kali buka)
     setIsLoading(true);
   }
 
-  // 2. Minta data paling baru dari Google Apps Script di latar belakang (Background)
+  // 2. Minta data paling baru dari Google Apps Script di latar belakang
   try {
     const response = await fetch(GAS_WEB_APP_URL, {
       method: 'POST',
@@ -2955,13 +2956,13 @@ function KatalogPage({ products = [], isLoading }) {
     const freshProducts = result.projects || [];
     setProducts(freshProducts);
     
-    // Simpan data terbaru ke LocalStorage untuk kunjungan berikutnya
-    localStorage.getItem('cached_portfolio_data', JSON.stringify(result));
+    // PERBAIKAN: Gunakan setItem (bukan getItem) untuk menyimpan ke cache
+    localStorage.setItem('cached_portfolio_data', JSON.stringify(result));
     
   } catch (error) {
     console.error('Gagal sinkronisasi data dari backend:', error);
   } finally {
-    // Pastikan loading benar-benar selesai
+    // Pastikan status loading dimatikan
     setIsLoading(false);
   }
 };
