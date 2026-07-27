@@ -4,10 +4,24 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-  <!-- ===== DIUBAH: Judul tab browser ===== -->
   <title>Dwisyaproject</title>
 
-  <!-- ===== DITAMBAH: PWA / Pintasan Layar Beranda (Home Screen Shortcut) ===== -->
+  <!-- ===== LOGO TOKO — favicon, tab browser & ikon install HP ===== -->
+  <!-- URL logo diambil langsung dari GitHub (PNG 1254×1254) -->
+  <link rel="icon" type="image/png" sizes="32x32"
+    href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
+  <link rel="icon" type="image/png" sizes="192x192"
+    href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
+  <link rel="shortcut icon"
+    href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
+
+  <!-- Ikon layar beranda iPhone/iPad (apple-touch-icon) -->
+  <link rel="apple-touch-icon" sizes="180x180"
+    href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
+  <link rel="apple-touch-icon" sizes="512x512"
+    href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
+
+  <!-- PWA Meta Tags -->
   <meta name="application-name" content="Dwisyaproject">
   <meta name="apple-mobile-web-app-title" content="Dwisyaproject">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -16,13 +30,13 @@
   <meta name="theme-color" content="#365314">
   <meta name="description" content="Dwisyafitriproject — portofolio, store, stockopname">
   <meta name="msapplication-TileColor" content="#365314">
-  <!-- Ikon untuk layar beranda iPhone/iPad (tas belanja biru + tulisan STORE) -->
-  <link rel="apple-touch-icon" sizes="512x512"
-    href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzM2NTMxNCIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjIzMiIgcj0iMTI4IiBmaWxsPSIjNjVBMzBEIi8+PHBhdGggZD0iTTE2MCAyMzJoMTkyTTI1NiAxMzZ2MTkyIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjx0ZXh0IHg9IjI1NiIgeT0iNDMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNzQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmYiPlI8L3RleHQ+PC9zdmc+">
-  <!-- Web App Manifest diinjeksikan via JS karena GAS tidak bisa serve file terpisah -->
+  <meta name="msapplication-TileImage"
+    content="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
+
+  <!-- Web App Manifest — memakai logotoko dari GitHub sebagai ikon install -->
   <script>
     (function () {
-      var iconB64 = "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzM2NTMxNCIvPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjIzMiIgcj0iMTI4IiBmaWxsPSIjNjVBMzBEIi8+PHBhdGggZD0iTTE2MCAyMzJoMTkyTTI1NiAxMzZ2MTkyIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iMjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjx0ZXh0IHg9IjI1NiIgeT0iNDMwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iNzQiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IiNmZmYiPlI8L3RleHQ+PC9zdmc+";
+      var LOGO_URL = "https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png";
       var manifest = {
         name: "Dwisyafitriproject",
         short_name: "Dwisyaproject",
@@ -33,8 +47,8 @@
         background_color: "#365314",
         theme_color: "#365314",
         icons: [
-          { src: iconB64, sizes: "192x192", type: "image/svg+xml" },
-          { src: iconB64, sizes: "512x512", type: "image/svg+xml", purpose: "any maskable" }
+          { src: LOGO_URL, sizes: "192x192", type: "image/png" },
+          { src: LOGO_URL, sizes: "512x512", type: "image/png", purpose: "any maskable" }
         ]
       };
       try {
@@ -47,7 +61,7 @@
       } catch (e) { /* sandbox fallback */ }
     })();
   </script>
-  <!-- ===== SELESAI: PWA Tags ===== -->
+  <!-- ===== SELESAI: Favicon & PWA Tags ===== -->
 
   <!-- Google Fonts: Space Grotesk -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -410,6 +424,47 @@ function gasCall(action, payload) {
 
   });
 }
+
+    // =================================================================
+    // SMART LOCALSTORAGE CACHE SYSTEM
+    // =================================================================
+    const CACHE_TTL_MS = 10 * 60 * 1000; // TTL default: 10 menit
+    const CACHE_PREFIX = 'dwisya_cache_';
+
+    const SmartCache = {
+      get(key) {
+        try {
+          const raw = localStorage.getItem(CACHE_PREFIX + key);
+          if (!raw) return null;
+          const { data, ts, ttl } = JSON.parse(raw);
+          if (Date.now() - ts > (ttl || CACHE_TTL_MS)) {
+            localStorage.removeItem(CACHE_PREFIX + key);
+            return null;
+          }
+          return data;
+        } catch { return null; }
+      },
+      set(key, data, ttl = CACHE_TTL_MS) {
+        try {
+          localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ data, ts: Date.now(), ttl }));
+        } catch (e) {
+          // Jika localStorage penuh, bersihkan cache lama lalu coba lagi
+          try {
+            Object.keys(localStorage).forEach(k => { if (k.startsWith(CACHE_PREFIX)) localStorage.removeItem(k); });
+            localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ data, ts: Date.now(), ttl }));
+          } catch {}
+        }
+      },
+      clear(key) {
+        try { localStorage.removeItem(CACHE_PREFIX + key); } catch {}
+      },
+      clearAll() {
+        try { Object.keys(localStorage).forEach(k => { if (k.startsWith(CACHE_PREFIX)) localStorage.removeItem(k); }); } catch {}
+      }
+    };
+    // =================================================================
+    // END SMART CACHE
+    // =================================================================
 
     const INDO_MONTHS = [
       'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -2841,8 +2896,27 @@ function gasCall(action, payload) {
         setTimeout(() => setToast(null), 3500);
       };
 
-      const loadInitialData = async () => {
-        setIsLoading(true);
+      const loadInitialData = async (isBackground = false) => {
+        // ── LANGKAH 1: Tampilkan cache secara instan (hanya saat pertama buka) ──
+        if (!isBackground) {
+          const cachedP = SmartCache.get('produk');
+          const cachedS = SmartCache.get('penjualan');
+          const cachedE = SmartCache.get('pengeluaran');
+          const cachedR = SmartCache.get('review');
+          const hasCache = cachedP || cachedS || cachedE || cachedR;
+
+          if (hasCache) {
+            if (cachedP) setProducts(cachedP);
+            if (cachedS) setSales(cachedS);
+            if (cachedE) setExpenses(cachedE);
+            if (cachedR) setReviews(cachedR);
+            setIsLoading(false); // Tampilkan cache langsung, tanpa nunggu network
+          } else {
+            setIsLoading(true); // Belum ada cache, tampilkan loading
+          }
+        }
+
+        // ── LANGKAH 2: Ambil data terbaru dari GAS di background ──
         try {
           const [resP, resS, resE, resR] = await Promise.all([
             gasCall('getProduk'),
@@ -2851,19 +2925,39 @@ function gasCall(action, payload) {
             gasCall('getReview'),
           ]);
 
-          if (resP && resP.data) setProducts(resP.data);
-          if (resS && resS.data) setSales(resS.data);
-          if (resE && resE.data) setExpenses(resE.data);
-          if (resR && resR.data) setReviews(resR.data);
+          // Perbarui state DAN simpan ke cache jika data berhasil diambil
+          if (resP && resP.data) {
+            setProducts(resP.data);
+            SmartCache.set('produk', resP.data);
+          }
+          if (resS && resS.data) {
+            setSales(resS.data);
+            SmartCache.set('penjualan', resS.data);
+          }
+          if (resE && resE.data) {
+            setExpenses(resE.data);
+            SmartCache.set('pengeluaran', resE.data);
+          }
+          if (resR && resR.data) {
+            setReviews(resR.data);
+            SmartCache.set('review', resR.data);
+          }
         } catch (e) {
           console.error('Error loading data:', e);
-          } finally {
+        } finally {
           setIsLoading(false);
         }
       };
 
       useEffect(() => {
-        loadInitialData();
+        loadInitialData(false);
+
+        // ── LANGKAH 3: Auto-sync ketika koneksi internet kembali ──
+        const handleOnline = () => {
+          loadInitialData(true); // Background refresh saat online kembali
+        };
+        window.addEventListener('online', handleOnline);
+        return () => window.removeEventListener('online', handleOnline);
       }, []);
 
       // Handlers Produk
@@ -2871,6 +2965,7 @@ function gasCall(action, payload) {
         const res = await gasCall('saveProduk', p);
         if (res && res.data) {
           setProducts(res.data);
+          SmartCache.set('produk', res.data);
           showToast('Produk berhasil disimpan!');
           return true;
         } else {
@@ -2889,6 +2984,7 @@ function gasCall(action, payload) {
             const res = await gasCall('deleteProduk', { ID: id });
             if (res && res.data) {
               setProducts(res.data);
+              SmartCache.set('produk', res.data);
               showToast('Produk berhasil dihapus');
             } else {
               showToast('Gagal menghapus produk', 'error');
@@ -2902,6 +2998,7 @@ function gasCall(action, payload) {
         const res = await gasCall('savePenjualan', s);
         if (res && res.data) {
           setSales(res.data);
+          SmartCache.set('penjualan', res.data);
           showToast('Transaksi berhasil disimpan!');
           const savedItem = res.data.find((x) => x.NAMA_PEMBELI === s.NAMA_PEMBELI && x.HARGA === s.HARGA) || s;
           return savedItem;
@@ -2921,6 +3018,7 @@ function gasCall(action, payload) {
             const res = await gasCall('deletePenjualan', { ID: id });
             if (res && res.data) {
               setSales(res.data);
+              SmartCache.set('penjualan', res.data);
               showToast('Transaksi berhasil dihapus');
             } else {
               showToast('Gagal menghapus transaksi', 'error');
@@ -2934,6 +3032,7 @@ function gasCall(action, payload) {
         const res = await gasCall('savePengeluaran', e);
         if (res && res.data) {
           setExpenses(res.data);
+          SmartCache.set('pengeluaran', res.data);
           showToast('Pengeluaran berhasil dicatat!');
           return true;
         } else {
@@ -2952,6 +3051,7 @@ function gasCall(action, payload) {
             const res = await gasCall('deletePengeluaran', { ID: id });
             if (res && res.data) {
               setExpenses(res.data);
+              SmartCache.set('pengeluaran', res.data);
               showToast('Pengeluaran berhasil dihapus');
             } else {
               showToast('Gagal menghapus pengeluaran', 'error');
@@ -2965,6 +3065,7 @@ function gasCall(action, payload) {
         const res = await gasCall('addReview', r);
         if (res && res.data) {
           setReviews(res.data);
+          SmartCache.set('review', res.data);
           showToast('Terima kasih atas ulasan Anda!');
         } else {
           showToast(res?.message || 'Gagal mengirim ulasan', 'error');
@@ -2975,6 +3076,7 @@ function gasCall(action, payload) {
         const res = await gasCall('updateReview', r);
         if (res && res.data) {
           setReviews(res.data);
+          SmartCache.set('review', res.data);
           showToast('Ulasan berhasil diperbarui!');
           return true;
         } else {
@@ -2993,6 +3095,7 @@ function gasCall(action, payload) {
             const res = await gasCall('deleteReview', { ID: id });
             if (res && res.data) {
               setReviews(res.data);
+              SmartCache.set('review', res.data);
               showToast('Ulasan berhasil dihapus');
             } else {
               showToast('Gagal menghapus ulasan', 'error');
