@@ -315,7 +315,7 @@ function initSheetHeaderAndDefaultData(sheet, sheetName) {
     sheet.appendRow(['R001', 'Andi', '628123456789', 5, 'Kopi susu aren-nya mantap sekali!', '2025-05-28T10:00:00.000Z', 'Terima kasih mas Andi!']);
   } else if (sheetName === 'Admin') {
     sheet.appendRow(['USERNAME', 'PASSWORD']);
-    sheet.appendRow(['admin', 'admin123']);
+    sheet.appendRow(['Tokodwi#1', 'KayaRaya@2026']);
   }
 }
 
