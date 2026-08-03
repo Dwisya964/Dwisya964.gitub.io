@@ -42,7 +42,7 @@ function doGet(e) {
   // Link struk publik. PDF disimpan di sheet StrukPDF sehingga pengiriman
   // struk tidak bergantung pada izin DriveApp.
   if (params.receipt) {
-    return renderReceiptPage_(String(params.receipt), params.pdf === '1');
+    return renderReceiptPage_(String(params.receipt));
   }
 
   // Manifest harus berupa endpoint nyata, bukan Blob URL sementara di browser.
@@ -576,7 +576,7 @@ function getReceiptSheet_() {
   return sheet;
 }
 
-function renderReceiptPage_(token, showPdf) {
+function renderReceiptPage_(token) {
   var safeToken = String(token || '').replace(/[^a-zA-Z0-9]/g, '');
   if (!safeToken) {
     return HtmlService.createHtmlOutput('<h2>Link struk tidak valid.</h2>');
@@ -588,8 +588,6 @@ function renderReceiptPage_(token, showPdf) {
     var lastRow = sheet.getLastRow();
     var lastColumn = sheet.getLastColumn();
 
-    // Cari token hanya di kolom pertama. Jangan membaca seluruh base64 PDF
-    // dari semua transaksi karena dapat membuat link struk lambat.
     if (lastRow > 1) {
       var tokenValues = sheet.getRange(2, 1, lastRow - 1, 1).getDisplayValues();
       for (var i = 0; i < tokenValues.length; i++) {
@@ -612,73 +610,114 @@ function renderReceiptPage_(token, showPdf) {
 
     var metadata = {};
     var chunkStart = 3;
-    // Format terbaru menyimpan metadata JSON di kolom ke-4.
     if (record[3] && String(record[3]).charAt(0) === '{') {
       try {
         metadata = JSON.parse(String(record[3]));
         chunkStart = 4;
-      } catch (metadataError) {
+      } catch (e) {
         metadata = {};
       }
     }
 
+    // Gabungkan semua chunk base64 menjadi satu string
     var encoded = '';
     for (var c = chunkStart; c < record.length; c++) {
       if (record[c]) encoded += String(record[c]);
     }
 
     var rawFilename = String(record[1] || 'struk.pdf');
+    var safeFilename = rawFilename.replace(/['"\\]/g, '');
     var filename = escapeHtml_(rawFilename);
-    var pdfDataUrl = 'data:application/pdf;base64,' + encoded;
-    if (showPdf) {
-      var pdfPage = '<!doctype html><html lang="id"><head>' +
-        '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
-        '<title>PDF Struk - ' + filename + '</title>' +
-        '<style>body{font-family:Arial,sans-serif;margin:0;background:#eff6ff}' +
-        'iframe{display:block;width:100%;height:100vh;border:0}</style></head><body>' +
-        '<iframe title="PDF Struk" src="' + pdfDataUrl + '"></iframe>' +
-        '</body></html>';
-      return HtmlService.createHtmlOutput(pdfPage).setTitle('PDF Struk');
-    }
 
-    var total = formatReceiptMoney_(metadata.HARGA);
-    var paid = formatReceiptMoney_(metadata.BAYAR);
-    var change = formatReceiptMoney_(metadata.KEMBALIAN);
+    var total    = formatReceiptMoney_(metadata.HARGA);
+    var paid     = formatReceiptMoney_(metadata.BAYAR);
+    var change   = formatReceiptMoney_(metadata.KEMBALIAN);
     var dateText = escapeHtml_(formatReceiptDate_(metadata.TANGGAL || record[2]));
-    var buyer = escapeHtml_(metadata.NAMA_PEMBELI || 'Pelanggan Umum');
-    var trx = escapeHtml_(metadata.NO_TRANSAKSI || '-');
+    var buyer    = escapeHtml_(metadata.NAMA_PEMBELI || 'Pelanggan Umum');
+    var trx      = escapeHtml_(metadata.NO_TRANSAKSI || '-');
     var products = escapeHtml_(metadata.PRODUK || 'Tidak ada detail produk').replace(/\n/g, '<br>');
-    var method = escapeHtml_(metadata.METODE || '-').toUpperCase();
-    var downloadUrl = '?receipt=' + encodeURIComponent(safeToken) + '&pdf=1';
-    var page = '<!doctype html><html lang="id"><head>' +
+    var method   = escapeHtml_(metadata.METODE || '-').toUpperCase();
+
+    // Pecah base64 menjadi potongan 4000 karakter agar aman sebagai
+    // literal JS di dalam tag <script> (menghindari batas string GAS).
+    var JS_CHUNK = 4000;
+    var b64Parts = [];
+    for (var p = 0; p < encoded.length; p += JS_CHUNK) {
+      b64Parts.push(encoded.substring(p, p + JS_CHUNK));
+    }
+    // Hasilkan: var _PDF_PARTS=["aaa","bbb",...];
+    var pdfPartsJs = 'var _PDF_PARTS=' + JSON.stringify(b64Parts) + ';';
+
+    var page =
+      '<!doctype html><html lang="id"><head>' +
       '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">' +
       '<meta name="theme-color" content="#1d4ed8"><title>Struk - ' + filename + '</title>' +
-      '<style>body{font-family:Arial,sans-serif;background:#eff6ff;margin:0;padding:16px;color:#111}' +
+      '<style>' +
+      'body{font-family:Arial,sans-serif;background:#eff6ff;margin:0;padding:16px;color:#111}' +
       '.paper{max-width:430px;margin:0 auto;background:#fff;border:2px solid #1d4ed8;' +
       'box-shadow:5px 5px 0 #1d4ed8;border-radius:10px;padding:20px}' +
       '.brand{text-align:center;border-bottom:2px dashed #1d4ed8;padding-bottom:14px;margin-bottom:14px}' +
-      '.brand h1{font-size:24px;margin:0;font-weight:800;letter-spacing:1px}.brand p{font-size:11px;margin:5px 0 0;color:#52627a}' +
+      '.brand h1{font-size:24px;margin:0;font-weight:800;letter-spacing:1px}' +
+      '.brand p{font-size:11px;margin:5px 0 0;color:#52627a}' +
       '.meta{font-size:12px;border-bottom:1px solid #dbeafe;padding-bottom:12px;margin-bottom:14px}' +
-      '.line{display:flex;justify-content:space-between;gap:14px;margin:6px 0}.label{color:#64748b}.value{text-align:right;font-weight:700}' +
+      '.line{display:flex;justify-content:space-between;gap:14px;margin:6px 0}' +
+      '.label{color:#64748b}.value{text-align:right;font-weight:700}' +
       '.section{font-size:11px;color:#64748b;font-weight:800;text-transform:uppercase;margin-bottom:6px}' +
-      '.products{font-size:14px;font-weight:700;line-height:1.45;border-bottom:1px dashed #93c5fd;padding-bottom:14px;margin-bottom:14px}' +
-      '.total{font-size:16px;font-weight:800}.thanks{text-align:center;font-size:12px;color:#64748b;margin:20px 0 14px}' +
-      '.download{display:block;text-align:center;text-decoration:none;background:#1d4ed8;color:#fff;padding:12px;border-radius:7px;font-weight:700;font-size:13px}' +
-      '</style></head><body><main class="paper">' +
+      '.products{font-size:14px;font-weight:700;line-height:1.45;' +
+      'border-bottom:1px dashed #93c5fd;padding-bottom:14px;margin-bottom:14px}' +
+      '.total{font-size:16px;font-weight:800}' +
+      '.thanks{text-align:center;font-size:12px;color:#64748b;margin:20px 0 14px}' +
+      '#btnUnduh{display:block;width:100%;box-sizing:border-box;text-align:center;cursor:pointer;' +
+      'background:#1d4ed8;color:#fff;padding:13px;border:none;border-radius:7px;' +
+      'font-weight:700;font-size:14px;margin-top:4px}' +
+      '#btnUnduh:active{opacity:.85}' +
+      '#msg{text-align:center;font-size:12px;color:#64748b;margin-top:8px;min-height:18px}' +
+      '</style></head><body>' +
+      '<main class="paper">' +
       '<div class="brand"><h1>dwisyafitriproject</h1><p>STRUK PEMBAYARAN KASIR</p></div>' +
-      '<div class="meta"><div class="line"><span class="label">No. Transaksi</span><span class="value">' + trx + '</span></div>' +
+      '<div class="meta">' +
+      '<div class="line"><span class="label">No. Transaksi</span><span class="value">' + trx + '</span></div>' +
       '<div class="line"><span class="label">Tanggal</span><span class="value">' + dateText + '</span></div>' +
       '<div class="line"><span class="label">Pembeli</span><span class="value">' + buyer + '</span></div>' +
-      '<div class="line"><span class="label">Metode</span><span class="value">' + method + '</span></div></div>' +
-      '<div class="section">Detail Pesanan</div><div class="products">' + products + '</div>' +
+      '<div class="line"><span class="label">Metode</span><span class="value">' + method + '</span></div>' +
+      '</div>' +
+      '<div class="section">Detail Pesanan</div>' +
+      '<div class="products">' + products + '</div>' +
       '<div class="line"><span class="label">Total Tagihan</span><span class="value total">' + total + '</span></div>' +
       '<div class="line"><span class="label">Bayar</span><span class="value">' + paid + '</span></div>' +
       '<div class="line"><span class="label">Kembalian</span><span class="value total">' + change + '</span></div>' +
       '<p class="thanks">Terima kasih telah berbelanja di dwisyafitriproject.</p>' +
-      '<a class="download" href="' + downloadUrl + '">Unduh PDF</a>' +
-      '</main></body></html>';
-    return HtmlService.createHtmlOutput(page)
-      .setTitle('Struk Pembayaran');
+      '<button id="btnUnduh" onclick="unduhPdf()">⬇ Unduh PDF Struk</button>' +
+      '<p id="msg"></p>' +
+      '</main>' +
+      '<script>' +
+      pdfPartsJs +
+      'function unduhPdf(){' +
+      '  var btn=document.getElementById("btnUnduh");' +
+      '  var msg=document.getElementById("msg");' +
+      '  btn.disabled=true;btn.textContent="Menyiapkan PDF...";msg.textContent="";' +
+      '  try{' +
+      '    var b64=_PDF_PARTS.join("");' +
+      '    var bin=atob(b64);' +
+      '    var arr=new Uint8Array(bin.length);' +
+      '    for(var i=0;i<bin.length;i++){arr[i]=bin.charCodeAt(i);}' +
+      '    var blob=new Blob([arr],{type:"application/pdf"});' +
+      '    var a=document.createElement("a");' +
+      '    a.href=URL.createObjectURL(blob);' +
+      '    a.download="' + safeFilename + '";' +
+      '    document.body.appendChild(a);a.click();' +
+      '    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(a.href);},1000);' +
+      '    btn.textContent="✓ PDF Terunduh";msg.textContent="File tersimpan di folder Unduhan Anda.";' +
+      '  }catch(e){' +
+      '    btn.disabled=false;btn.textContent="⬇ Unduh PDF Struk";' +
+      '    msg.textContent="Gagal: "+e.message;' +
+      '  }' +
+      '}' +
+      '<\/script>' +
+      '</body></html>';
+
+    return HtmlService.createHtmlOutput(page).setTitle('Struk Pembayaran');
+
   } catch (err) {
     return HtmlService.createHtmlOutput(
       '<h2>Gagal membuka struk</h2><p>' +
