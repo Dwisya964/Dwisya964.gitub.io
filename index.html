@@ -3,25 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
   <title>Dwisyaproject</title>
-
-  <!-- ===== LOGO TOKO — favicon, tab browser & ikon install HP ===== -->
-  <!-- URL logo diambil langsung dari GitHub (PNG 1254×1254) -->
-  <link rel="icon" type="image/png" sizes="32x32"
-    href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
-  <link rel="icon" type="image/png" sizes="192x192"
-    href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
-  <link rel="shortcut icon"
-    href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
-
-  <!-- Ikon layar beranda iPhone/iPad (apple-touch-icon) -->
-  <link rel="apple-touch-icon" sizes="180x180"
-    href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
-  <link rel="apple-touch-icon" sizes="512x512"
-    href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
-
-  <!-- PWA Meta Tags -->
+  <link rel="icon" type="image/png" sizes="32x32" href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
+  <link rel="shortcut icon" href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
   <meta name="application-name" content="Dwisyaproject">
   <meta name="apple-mobile-web-app-title" content="Dwisyaproject">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -30,10 +17,7 @@
   <meta name="theme-color" content="#365314">
   <meta name="description" content="Dwisyafitriproject — portofolio, store, stockopname">
   <meta name="msapplication-TileColor" content="#365314">
-  <meta name="msapplication-TileImage"
-    content="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
-
-  <!-- Web App Manifest — memakai logotoko dari GitHub sebagai ikon install -->
+  <meta name="msapplication-TileImage" content="https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png">
   <script>
     (function () {
       var LOGO_URL = "https://raw.githubusercontent.com/Dwisya964/Dwisya964.gitub.io/main/logotoko.png";
@@ -58,32 +42,18 @@
         link.rel = 'manifest';
         link.href = url;
         document.head.appendChild(link);
-      } catch (e) { /* sandbox fallback */ }
+      } catch (e) {}
     })();
   </script>
-  <!-- ===== SELESAI: Favicon & PWA Tags ===== -->
-
-  <!-- Google Fonts: Space Grotesk -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700;800&family=Karla:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- React 18 & ReactDOM 18 UMD -->
   <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-  
-  <!-- Babel Standalone untuk JSX Runtime di Browser -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-
-  <!-- PDF generator untuk struk thermal 58 mm -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-  <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #EFF6FF; color: #1E3A5F; margin:0;padding:0;-webkit-font-smoothing:antialiased; }
     h1, h2, h3, .font-extrabold, .font-black { font-family: 'Poppins', sans-serif !important; }
@@ -124,9 +94,6 @@
       #print-receipt-container { position: absolute; left: 0; top: 0; width: 58mm; max-width: 58mm; padding: 3mm; box-sizing: border-box; font-size: 10px; overflow: visible; }
     }
     .receipt-paper { width: 58mm; max-width: 100%; margin: 0 auto; padding: 4mm; box-sizing: border-box; background: #fff; color: #000; }
-    
-
-    /* Visual system: Dwisyafitriproject */
     .variant-10 {
       background-color: #F7FEE7 !important;
       color: #1A2E05 !important;
@@ -175,22 +142,17 @@
       transition-timing-function: cubic-bezier(.175,.885,.32,1.275) !important;
     }
     .variant-10 .neo-border:hover { filter: saturate(1.08); }
-    
   </style>
 </head>
 <body class="variant-10 bg-[#F5F5F5] text-black min-h-screen flex flex-col">
-  
   <div id="root">
     <div class="flex items-center justify-center min-h-screen font-bold text-lg">
       Memuat Dwisyafitriproject...
     </div>
   </div>
-
-  <!-- BINDING UTAMA GOOGLE APPS SCRIPT & REACT FULL CLIENT APPLICATION -->
   <script type="text/babel">
     const { useState, useEffect, useMemo, useRef } = React;
 
-    // --- UTILITIES & API HELPER ---
     function rp(n) {
       const num = Number(n || 0);
       return 'Rp ' + num.toLocaleString('id-ID');
@@ -379,56 +341,32 @@
 
     const API_URL = "https://script.google.com/macros/s/AKfycbxh1uOsPRj35674362d0wu4a2UOtbGh1ZBtZTmch_PdN7jg-BkdeOsseQQmV3XkdMIh/exec";
 
-function gasCall(action, payload) {
-  return new Promise((resolve) => {
-
-    // Jika dijalankan di Google Apps Script
-    if (typeof google !== "undefined" &&
-        google.script &&
-        google.script.run) {
-
-      google.script.run
-        .withSuccessHandler(resolve)
-        .withFailureHandler(err => {
-          resolve({
-            ok: false,
-            message: String(err)
+    function gasCall(action, payload) {
+      return new Promise((resolve) => {
+        if (typeof google !== "undefined" && google.script && google.script.run) {
+          google.script.run
+            .withSuccessHandler(resolve)
+            .withFailureHandler(err => {
+              resolve({ ok: false, message: String(err) });
+            })
+            .handleAction(action, payload);
+        } else {
+          fetch(API_URL, {
+            method: "POST",
+            redirect: "follow",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: action, payload: payload })
+          })
+          .then(res => res.json())
+          .then(resolve)
+          .catch(err => {
+            resolve({ ok: false, message: err.message });
           });
-        })
-        .handleAction(action, payload);
-
-    } else {
-
-      // Jika dijalankan di GitHub Pages
-      fetch(API_URL, {
-        method: "POST",
-        redirect: "follow",
-        headers: {
-          "Content-Type": "text/plain;charset=utf-8"
-        },
-        body: JSON.stringify({
-          action: action,
-          payload: payload
-        })
-      })
-      .then(res => res.json())
-      .then(resolve)
-      .catch(err => {
-        resolve({
-          ok: false,
-          message: err.message
-        });
+        }
       });
-
     }
 
-  });
-}
-
-    // =================================================================
-    // SMART LOCALSTORAGE CACHE SYSTEM
-    // =================================================================
-    const CACHE_TTL_MS = 10 * 60 * 1000; // TTL default: 10 menit
+    const CACHE_TTL_MS = 10 * 60 * 1000;
     const CACHE_PREFIX = 'dwisya_cache_';
 
     const SmartCache = {
@@ -448,7 +386,6 @@ function gasCall(action, payload) {
         try {
           localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ data, ts: Date.now(), ttl }));
         } catch (e) {
-          // Jika localStorage penuh, bersihkan cache lama lalu coba lagi
           try {
             Object.keys(localStorage).forEach(k => { if (k.startsWith(CACHE_PREFIX)) localStorage.removeItem(k); });
             localStorage.setItem(CACHE_PREFIX + key, JSON.stringify({ data, ts: Date.now(), ttl }));
@@ -462,9 +399,6 @@ function gasCall(action, payload) {
         try { Object.keys(localStorage).forEach(k => { if (k.startsWith(CACHE_PREFIX)) localStorage.removeItem(k); }); } catch {}
       }
     };
-    // =================================================================
-    // END SMART CACHE
-    // =================================================================
 
     const INDO_MONTHS = [
       'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
@@ -478,9 +412,6 @@ function gasCall(action, payload) {
       return `${INDO_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
     }
 
-    // --- COMPONENTS ---
-
-    // Toast
     function Toast({ toast }) {
       if (!toast) return null;
       return (
@@ -493,7 +424,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // ConfirmModal
     function ConfirmModal({ isOpen, title, message, onConfirm, onCancel }) {
       if (!isOpen) return null;
       return (
@@ -502,16 +432,10 @@ function gasCall(action, payload) {
             <h3 className="font-extrabold text-lg mb-2">{title || 'Konfirmasi'}</h3>
             <p className="text-sm font-medium text-gray-700 mb-6">{message}</p>
             <div className="flex gap-3 justify-end">
-              <button
-                onClick={onCancel}
-                className="neo-border px-4 py-2 text-xs font-extrabold bg-gray-100 hover:bg-gray-200"
-              >
+              <button onClick={onCancel} className="neo-border px-4 py-2 text-xs font-extrabold bg-gray-100 hover:bg-gray-200">
                 Batal
               </button>
-              <button
-                onClick={onConfirm}
-                className="neo-border px-4 py-2 text-xs font-extrabold bg-red-500 text-white hover:bg-red-600"
-              >
+              <button onClick={onConfirm} className="neo-border px-4 py-2 text-xs font-extrabold bg-red-500 text-white hover:bg-red-600">
                 Hapus
               </button>
             </div>
@@ -520,15 +444,11 @@ function gasCall(action, payload) {
       );
     }
 
-    // Header
     function Header({ currentPage, setCurrentPage, isAdminLoggedIn, onOpenLogin, onLogout }) {
       return (
         <header className="bg-white neo-border border-t-0 border-x-0 sticky top-0 z-40">
           <div className="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-            <div
-              onClick={() => setCurrentPage('katalog')}
-              className="cursor-pointer flex items-center gap-2"
-            >
+            <div onClick={() => setCurrentPage('katalog')} className="cursor-pointer flex items-center gap-2">
               <div className="w-9 h-9 bg-[#FFDD00] neo-border neo-shadow-sm flex items-center justify-center font-extrabold text-lg">
                 ⌁
               </div>
@@ -588,7 +508,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // Footer
     function Footer() {
       return (
         <footer className="mt-auto bg-white neo-border border-b-0 border-x-0 py-6">
@@ -602,17 +521,20 @@ function gasCall(action, payload) {
       );
     }
 
-    // StrukModal
     function StrukModal({ isOpen, sale, onClose }) {
       const [isShareOpen, setIsShareOpen] = useState(false);
       const [sharePhone, setSharePhone] = useState('');
       const [isSharing, setIsSharing] = useState(false);
+      const [isDownloading, setIsDownloading] = useState(false);
+      const [downloadError, setDownloadError] = useState('');
 
       useEffect(() => {
         if (isOpen && sale) {
           setSharePhone(cleanWaInput(sale.WHATSAPP || ''));
           setIsShareOpen(false);
           setIsSharing(false);
+          setIsDownloading(false);
+          setDownloadError('');
         }
       }, [isOpen, sale]);
 
@@ -622,9 +544,20 @@ function gasCall(action, payload) {
         window.print();
       };
 
-      // ===== DIUBAH: handleSharePdf — alur baru via Google Drive =====
+      const handleDownloadPdf = () => {
+        setDownloadError('');
+        setIsDownloading(true);
+        try {
+          const pdf = createReceiptPdf(sale);
+          downloadReceiptPdf(pdf);
+        } catch (err) {
+          setDownloadError(err?.message || 'Gagal membuat PDF. Pastikan halaman sudah sepenuhnya dimuat.');
+        } finally {
+          setIsDownloading(false);
+        }
+      };
+
       const handleSharePdf = async () => {
-        // 1. Ambil & validasi nomor WhatsApp, konversi 08xx → 628xx otomatis
         const phone = cleanWaInput(sharePhone);
         if (phone.length < 8) {
           alert('Masukkan nomor WhatsApp tujuan yang valid.');
@@ -633,25 +566,19 @@ function gasCall(action, payload) {
 
         setIsSharing(true);
         try {
-          // 2. Generate file PDF dari data struk yang sedang tampil di browser
           const pdf = createReceiptPdf(sale);
-
-          // 3. Upload PDF ke Google Drive (folder otomatis dibuat jika belum ada)
-          //    Server akan set permission "Anyone with the link can view" secara otomatis
           const result = await gasCall('uploadReceiptPdfToDrive', {
             base64: pdf.dataUri,
             filename: pdf.filename,
             folderName: 'Struk Transaksi Dwisyafitriproject',
+            receiptData: sale,
           });
 
           if (!result || !result.ok) {
             throw new Error(result?.message || 'Gagal mengupload PDF ke Google Drive.');
           }
 
-          // 4. Ambil URL file PDF dari Google Drive
           const driveUrl = result.fileUrl;
-
-          // 5. Buat pesan otomatis berisi sapaan, detail transaksi, dan link Drive
           const totalBelanja = typeof sale.HARGA === 'number'
             ? sale.HARGA.toLocaleString('id-ID')
             : String(sale.HARGA || '0');
@@ -668,12 +595,8 @@ function gasCall(action, payload) {
             `Semoga puas dengan pelayanan kami! 😊`,
           ].join('\n');
 
-          // 6. Gabungkan nomor, pesan, dan link ke format URL WhatsApp siap klik
           const waUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-
-          // 7. Buka chat WhatsApp customer secara otomatis
           window.open(waUrl, '_blank');
-
           setIsShareOpen(false);
         } catch (error) {
           alert(error?.message || 'Gagal mengirim struk PDF.');
@@ -681,7 +604,6 @@ function gasCall(action, payload) {
           setIsSharing(false);
         }
       };
-      // ===== SELESAI: handleSharePdf =====
 
       return (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
@@ -710,17 +632,17 @@ function gasCall(action, payload) {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Pembeli:</span>
-                  <span className="font-bold">{sale.NAMA_PEMBELI}</span>
+                  <span className="font-bold">{sale.NAMA_PEMBELI || 'Pelanggan Umum'}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-500">Metode:</span>
-                  <span className="font-bold uppercase">{sale.METODE}</span>
+                  <span className="font-bold uppercase">{sale.METODE || '-'}</span>
                 </div>
               </div>
 
               <div className="text-left mb-4 border-b border-gray-300 pb-3">
                 <div className="text-[11px] font-bold text-gray-500 uppercase mb-1">Detail Pesanan:</div>
-                <div className="receipt-product font-bold text-sm">{sale.PRODUK}</div>
+                <div className="receipt-product font-bold text-sm">{sale.PRODUK || 'Tidak ada detail produk'}</div>
               </div>
 
               <div className="text-left text-xs font-mono space-y-1 mb-6">
@@ -742,6 +664,24 @@ function gasCall(action, payload) {
                 Terima kasih telah berbelanja di Dwisyafitriproject!
               </p>
             </div>
+
+            {/* Tombol Unduh PDF langsung */}
+            <button
+              onClick={handleDownloadPdf}
+              disabled={isDownloading}
+              className="w-full mt-3 bg-[#00E5A0] neo-border neo-shadow-sm py-2 text-xs font-extrabold hover:bg-emerald-400 disabled:opacity-50 flex items-center justify-center gap-2"
+            >
+              <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              {isDownloading ? 'Membuat PDF...' : 'Unduh Struk PDF'}
+            </button>
+
+            {downloadError && (
+              <p className="text-[11px] text-red-600 font-bold mt-1 text-center">{downloadError}</p>
+            )}
 
             {isShareOpen && (
               <div className="mt-3 neo-border bg-[#E8FFF0] p-3">
@@ -816,7 +756,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // CatalogProductCard with slidable gallery
     function CatalogProductCard({ product, onSelectDetail, onPesanWa }) {
       const [currentIdx, setCurrentIdx] = useState(0);
 
@@ -844,7 +783,6 @@ function gasCall(action, payload) {
 
       return (
         <div className="bg-white neo-border neo-shadow flex flex-col hover:-translate-y-1 transition-all duration-150 group">
-          {/* Photo Carousel */}
           <div className="relative h-48 bg-gray-100 overflow-hidden border-b-2 border-black select-none">
             <div
               className="flex h-full transition-transform duration-300 ease-out"
@@ -861,12 +799,10 @@ function gasCall(action, payload) {
               ))}
             </div>
 
-            {/* Badge Status */}
             <span className="absolute top-2 right-2 px-2 py-0.5 text-[10px] font-extrabold neo-border uppercase bg-[#00E5A0] text-black">
               Tersedia
             </span>
 
-            {/* Carousel Controls */}
             {displayImgs.length > 1 && (
               <>
                 <button
@@ -940,7 +876,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // Modal Detail Produk dengan Slider
     function ProductDetailModal({ product, onClose, onPesanWa }) {
       const [currentIdx, setCurrentIdx] = useState(0);
 
@@ -970,7 +905,6 @@ function gasCall(action, payload) {
 
             <h3 className="font-black text-xl mb-3 pr-8 text-black">{product.NAMA}</h3>
 
-            {/* Slider Foto Detail */}
             <div className="relative h-60 bg-gray-100 neo-border mb-4 overflow-hidden select-none">
               <div
                 className="flex h-full transition-transform duration-300 ease-out"
@@ -1062,7 +996,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // KatalogPage
     function KatalogPage({ products, isLoading }) {
       const [selectedProduct, setSelectedProduct] = useState(null);
       const [searchQuery, setSearchQuery] = useState('');
@@ -1118,7 +1051,6 @@ function gasCall(action, payload) {
             </div>
           )}
 
-          {/* Modal Detail Produk */}
           {selectedProduct && (
             <ProductDetailModal
               product={selectedProduct}
@@ -1130,7 +1062,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // UlasanPage
     function UlasanPage({ reviews, onAddReview, isLoading }) {
       const [nama, setNama] = useState('');
       const [wa, setWa] = useState('');
@@ -1180,7 +1111,6 @@ function gasCall(action, payload) {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Form Tambah Ulasan */}
             <div className="bg-white neo-border neo-shadow p-6 h-fit">
               <h3 className="font-black text-lg mb-4 border-b-2 border-black pb-2">Tulis Ulasan Anda</h3>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -1247,7 +1177,6 @@ function gasCall(action, payload) {
               </form>
             </div>
 
-            {/* List Ulasan */}
             <div className="lg:col-span-2 space-y-4">
               <h3 className="font-black text-lg border-b-2 border-black pb-2">Semua Ulasan</h3>
               {isLoading ? (
@@ -1278,7 +1207,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // AdminLogin Modal
     function AdminLogin({ isOpen, onClose, onLoginSuccess, showToast }) {
       const [username, setUsername] = useState('');
       const [password, setPassword] = useState('');
@@ -1351,7 +1279,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // AdminProdukTab
     function AdminProdukTab({ products, onSaveProduct, onDeleteProduct }) {
       const [editingId, setEditingId] = useState(null);
       const [nama, setNama] = useState('');
@@ -1434,7 +1361,6 @@ function gasCall(action, payload) {
 
       return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Form Produk */}
           <div className="bg-white neo-border neo-shadow p-6 h-fit space-y-4">
             <h3 className="font-black text-lg mb-2 border-b-2 border-black pb-2">
               {editingId ? `Edit Produk #${editingId}` : 'Tambah Produk Baru'}
@@ -1466,7 +1392,6 @@ function gasCall(action, payload) {
                 />
               </div>
 
-              {/* Foto 1 Utama */}
               <div>
                 <label className="block text-xs font-bold uppercase mb-1">
                   📷 Foto 1 — Utama <span className="normal-case font-normal text-gray-500">(URL / Drive / Upload)</span>
@@ -1494,7 +1419,6 @@ function gasCall(action, payload) {
                 )}
               </div>
 
-              {/* Foto 2 Opsional */}
               <div>
                 <label className="block text-xs font-bold uppercase mb-1">
                   📷 Foto 2 <span className="normal-case font-normal text-gray-500">(Opsional)</span>
@@ -1522,7 +1446,6 @@ function gasCall(action, payload) {
                 )}
               </div>
 
-              {/* Foto 3 Opsional */}
               <div>
                 <label className="block text-xs font-bold uppercase mb-1">
                   📷 Foto 3 <span className="normal-case font-normal text-gray-500">(Opsional)</span>
@@ -1615,7 +1538,6 @@ function gasCall(action, payload) {
             </form>
           </div>
 
-          {/* Tabel Produk */}
           <div className="lg:col-span-2">
             <div className="bg-white neo-border neo-shadow overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
@@ -1688,7 +1610,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // AdminKasirTab (POS Multi-Product)
     function AdminKasirTab({ products, sales, onSaveSale, onDeleteSale, onShowReceipt }) {
       const [editingId, setEditingId] = useState(null);
       const [nama, setNama] = useState('');
@@ -1792,7 +1713,6 @@ function gasCall(action, payload) {
 
       return (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Form Kasir POS */}
           <div className="bg-white neo-border neo-shadow p-6 h-fit">
             <h3 className="font-black text-lg mb-4 border-b-2 border-black pb-2">Input Penjualan Kasir</h3>
             
@@ -1846,7 +1766,6 @@ function gasCall(action, payload) {
                 </div>
               </div>
 
-              {/* Cart Items */}
               <div className="neo-border p-3 bg-gray-50 flex flex-col gap-2">
                 <div className="text-xs font-bold uppercase tracking-wider border-b pb-1 flex justify-between">
                   <span>Daftar Pesanan ({cart.length})</span>
@@ -1951,7 +1870,6 @@ function gasCall(action, payload) {
             </form>
           </div>
 
-          {/* Tabel Riwayat Kasir */}
           <div className="lg:col-span-2">
             <div className="bg-white neo-border neo-shadow overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
@@ -2004,7 +1922,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // AdminArusCashTab (Arus Cash Keuangan, Cash Runway, Net Profit Margin & PDF Generator)
     function AdminArusCashTab({ sales, expenses, onSaveExpense, onDeleteExpense }) {
       const [selectedMonth, setSelectedMonth] = useState('Semua Bulan');
       const [formKeterangan, setFormKeterangan] = useState('');
@@ -2257,7 +2174,6 @@ function gasCall(action, payload) {
 
       return (
         <div className="space-y-6">
-          {/* Header & Filter */}
           <div className="flex flex-wrap items-center justify-between gap-4 bg-white neo-border p-5 neo-shadow">
             <div>
               <h3 className="font-extrabold text-lg text-black">Arus Cash & Laporan Keuangan</h3>
@@ -2288,7 +2204,6 @@ function gasCall(action, payload) {
             </div>
           </div>
 
-          {/* Top Metric Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="bg-white neo-border p-4 neo-shadow relative overflow-hidden">
               <div className="flex justify-between items-start">
@@ -2315,9 +2230,7 @@ function gasCall(action, payload) {
             </div>
           </div>
 
-          {/* Key Analytics Row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* 1. Cash Runway Circular Gauge */}
             <div className="bg-white neo-border p-5 neo-shadow flex flex-col justify-between">
               <div>
                 <div className="flex justify-between items-center mb-2">
@@ -2358,7 +2271,6 @@ function gasCall(action, payload) {
               </div>
             </div>
 
-            {/* 2. Net Profit Margin Ring */}
             <div className="bg-white neo-border p-5 neo-shadow flex flex-col justify-between">
               <div>
                 <div className="flex justify-between items-center mb-2">
@@ -2399,7 +2311,6 @@ function gasCall(action, payload) {
               </div>
             </div>
 
-            {/* 3. Warning Card */}
             <div className="bg-[#FF3B30] text-white neo-border p-5 neo-shadow flex flex-col justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-2">
@@ -2430,9 +2341,7 @@ function gasCall(action, payload) {
             </div>
           </div>
 
-          {/* Record Expense Form & Tables */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Form Tambah/Edit Pengeluaran */}
             <div className="bg-white neo-border neo-shadow p-6 h-fit space-y-4">
               <h3 className="font-black text-lg border-b-2 border-black pb-2 text-black">
                 {editingExpenseId ? `Edit Pengeluaran #${editingExpenseId}` : 'Catat Pengeluaran Baru'}
@@ -2502,9 +2411,7 @@ function gasCall(action, payload) {
               </form>
             </div>
 
-            {/* Tables Area */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Table Pemasukan */}
               <div className="bg-white neo-border neo-shadow overflow-hidden">
                 <div className="p-3 bg-black text-[#FFDD00] font-black text-xs uppercase flex justify-between items-center">
                   <span>1. Riwayat Pemasukan ({selectedMonth})</span>
@@ -2538,7 +2445,6 @@ function gasCall(action, payload) {
                 </div>
               </div>
 
-              {/* Table Pengeluaran */}
               <div className="bg-white neo-border neo-shadow overflow-hidden">
                 <div className="p-3 bg-black text-[#FF3B30] font-black text-xs uppercase flex justify-between items-center">
                   <span>2. Riwayat Pengeluaran ({selectedMonth})</span>
@@ -2592,7 +2498,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // AdminUlasanTab
     function AdminUlasanTab({ reviews, onUpdateReview, onDeleteReview }) {
       const [modalOpen, setModalOpen] = useState(false);
       const [editingId, setEditingId] = useState(null);
@@ -2666,7 +2571,7 @@ function gasCall(action, payload) {
                       <td className="p-3 whitespace-nowrap">
                         <div className="font-extrabold text-sm text-black">{r.NAMA}</div>
                         {r.WHATSAPP && (
-                          <div className="text-[10px] font-mono text-gray-500">+{r.WHATSAPP}</div>
+                          <div className="text-[10px] font-mono text-gray-500">+r.WHATSAPP</div>
                         )}
                       </td>
                       <td className="p-3 whitespace-nowrap text-yellow-500 font-bold text-sm">
@@ -2694,7 +2599,6 @@ function gasCall(action, payload) {
             </table>
           </div>
 
-          {/* Edit Review Modal */}
           {modalOpen && (
             <div className="fixed inset-0 z-[500] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
               <div className="bg-white neo-border-3 neo-shadow-lg w-full max-w-md">
@@ -2781,7 +2685,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // AdminDashboard
     function AdminDashboard({
       products,
       sales,
@@ -2874,7 +2777,6 @@ function gasCall(action, payload) {
       );
     }
 
-    // MAIN APP COMPONENT
     function App() {
       const [currentPage, setCurrentPage] = useState('katalog');
       const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -2897,7 +2799,6 @@ function gasCall(action, payload) {
       };
 
       const loadInitialData = async (isBackground = false) => {
-        // ── LANGKAH 1: Tampilkan cache secara instan (hanya saat pertama buka) ──
         if (!isBackground) {
           const cachedP = SmartCache.get('produk');
           const cachedS = SmartCache.get('penjualan');
@@ -2910,13 +2811,12 @@ function gasCall(action, payload) {
             if (cachedS) setSales(cachedS);
             if (cachedE) setExpenses(cachedE);
             if (cachedR) setReviews(cachedR);
-            setIsLoading(false); // Tampilkan cache langsung, tanpa nunggu network
+            setIsLoading(false);
           } else {
-            setIsLoading(true); // Belum ada cache, tampilkan loading
+            setIsLoading(true);
           }
         }
 
-        // ── LANGKAH 2: Ambil data terbaru dari GAS di background ──
         try {
           const [resP, resS, resE, resR] = await Promise.all([
             gasCall('getProduk'),
@@ -2925,7 +2825,6 @@ function gasCall(action, payload) {
             gasCall('getReview'),
           ]);
 
-          // Perbarui state DAN simpan ke cache jika data berhasil diambil
           if (resP && resP.data) {
             setProducts(resP.data);
             SmartCache.set('produk', resP.data);
@@ -2952,15 +2851,13 @@ function gasCall(action, payload) {
       useEffect(() => {
         loadInitialData(false);
 
-        // ── LANGKAH 3: Auto-sync ketika koneksi internet kembali ──
         const handleOnline = () => {
-          loadInitialData(true); // Background refresh saat online kembali
+          loadInitialData(true);
         };
         window.addEventListener('online', handleOnline);
         return () => window.removeEventListener('online', handleOnline);
       }, []);
 
-      // Handlers Produk
       const handleSaveProduct = async (p) => {
         const res = await gasCall('saveProduk', p);
         if (res && res.data) {
@@ -2993,7 +2890,6 @@ function gasCall(action, payload) {
         });
       };
 
-      // Handlers Penjualan
       const handleSaveSale = async (s) => {
         const res = await gasCall('savePenjualan', s);
         if (res && res.data) {
@@ -3027,7 +2923,6 @@ function gasCall(action, payload) {
         });
       };
 
-      // Handlers Pengeluaran
       const handleSaveExpense = async (e) => {
         const res = await gasCall('savePengeluaran', e);
         if (res && res.data) {
@@ -3060,7 +2955,6 @@ function gasCall(action, payload) {
         });
       };
 
-      // Handlers Review
       const handleAddReview = async (r) => {
         const res = await gasCall('addReview', r);
         if (res && res.data) {
@@ -3164,7 +3058,6 @@ function gasCall(action, payload) {
 
           <Footer />
 
-          {/* Modal & Toast Overlays */}
           <AdminLogin
             isOpen={isLoginModalOpen}
             onClose={() => setIsLoginModalOpen(false)}
@@ -3194,16 +3087,8 @@ function gasCall(action, payload) {
       );
     }
 
-    // Render App ke Element DOM #root
     ReactDOM.createRoot(document.getElementById('root')).render(<App />);
   </script>
-
-  <!-- Script Module untuk Vite Dev Environment -->
-  <script type="module">
-    // Vite loader fallback jika dijalankan di Node/Vite preview container
-    if (typeof window.React === 'undefined') {
-      import('/src/main.tsx');
-    }
-  </script>
+  <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
