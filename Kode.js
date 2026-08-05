@@ -139,8 +139,9 @@ function handleAction(action, payload) {
     case 'getReview':
       return getSheetData(ss, 'Review');
     case 'addReview':
-    case 'updateReview':
       return saveSheetRow(ss, 'Review', payload);
+    case 'updateReview':
+      return updateReviewRow(ss, payload);
     case 'deleteReview':
       return deleteSheetRow(ss, 'Review', payload);
 
@@ -268,6 +269,55 @@ function deleteSheetRow(ss, sheetName, payload) {
     }
   }
   return { ok: false, message: 'Data ID tidak ditemukan.' };
+}
+
+// 6b. UPDATE BARIS ULASAN — FUNGSI KHUSUS ROBUST
+// Menerima payload string JSON maupun object. Tidak pernah append baris baru —
+// jika ID tidak ditemukan, kembalikan error eksplisit.
+function updateReviewRow(ss, payload) {
+  try {
+    var sheet = ss.getSheetByName('Review');
+    if (!sheet) return { ok: false, message: 'Sheet Review tidak ditemukan.' };
+
+    var data = typeof payload === 'string' ? JSON.parse(payload) : payload;
+    var targetId = String(data.ID || '').trim();
+
+    if (!targetId) return { ok: false, message: 'ID ulasan tidak boleh kosong.' };
+
+    var allValues = sheet.getDataRange().getValues();
+    if (allValues.length < 2) return { ok: false, message: 'Sheet Review kosong.' };
+
+    var headers = allValues[0];
+
+    // Cari baris berdasarkan ID (kolom pertama), bandingkan sebagai string
+    var rowIndex = -1;
+    for (var i = 1; i < allValues.length; i++) {
+      if (String(allValues[i][0]).trim() === targetId) {
+        rowIndex = i + 1; // nomor baris di Sheets (1-based, baris 1 = header)
+        break;
+      }
+    }
+
+    if (rowIndex < 0) {
+      return { ok: false, message: 'Ulasan ID "' + targetId + '" tidak ditemukan di sheet.' };
+    }
+
+    // Susun data baris baru: jika key ada di payload pakai nilai baru,
+    // jika tidak ada pertahankan nilai lama dari spreadsheet.
+    var existingRow = allValues[rowIndex - 1];
+    var rowData = [];
+    for (var h = 0; h < headers.length; h++) {
+      var key = String(headers[h]).trim();
+      rowData.push(data[key] !== undefined && data[key] !== null ? data[key] : existingRow[h]);
+    }
+
+    sheet.getRange(rowIndex, 1, 1, rowData.length).setValues([rowData]);
+    SpreadsheetApp.flush(); // Pastikan perubahan langsung tersimpan
+    return getSheetData(ss, 'Review');
+
+  } catch (err) {
+    return { ok: false, message: 'Gagal update ulasan: ' + err.toString() };
+  }
 }
 
 // 7. FUNGSI LOGIN ADMIN
