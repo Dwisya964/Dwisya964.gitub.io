@@ -341,28 +341,19 @@
 
     const API_URL = "https://script.google.com/macros/s/AKfycbxh1uOsPRj35674362d0wu4a2UOtbGh1ZBtZTmch_PdN7jg-BkdeOsseQQmV3XkdMIh/exec";
 
+    // Selalu gunakan fetch POST ke deployment URL.
+    // google.script.run tidak andal untuk payload kompleks & response bersarang,
+    // sehingga dinonaktifkan sepenuhnya agar perilaku konsisten di semua browser.
     function gasCall(action, payload) {
-      return new Promise((resolve) => {
-        if (typeof google !== "undefined" && google.script && google.script.run) {
-          google.script.run
-            .withSuccessHandler(resolve)
-            .withFailureHandler(err => {
-              resolve({ ok: false, message: String(err) });
-            })
-            .handleAction(action, payload);
-        } else {
-          fetch(API_URL, {
-            method: "POST",
-            redirect: "follow",
-            headers: { "Content-Type": "text/plain;charset=utf-8" },
-            body: JSON.stringify({ action: action, payload: payload })
-          })
-          .then(res => res.json())
-          .then(resolve)
-          .catch(err => {
-            resolve({ ok: false, message: err.message });
-          });
-        }
+      return fetch(API_URL, {
+        method: "POST",
+        redirect: "follow",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: action, payload: payload })
+      })
+      .then(function(res) { return res.json(); })
+      .catch(function(err) {
+        return { ok: false, message: err.message || String(err) };
       });
     }
 
@@ -1211,20 +1202,27 @@
       const [username, setUsername] = useState('');
       const [password, setPassword] = useState('');
       const [isLoading, setIsLoading] = useState(false);
+      // Pesan error inline di dalam form agar langsung terlihat pengguna
+      const [loginError, setLoginError] = useState('');
 
       if (!isOpen) return null;
 
       const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoginError('');
         setIsLoading(true);
         try {
           const res = await gasCall('loginAdmin', { username, password });
           if (res && res.ok) {
             showToast('Login Admin berhasil!', 'success');
+            setLoginError('');
             onLoginSuccess();
             onClose();
           } else {
-            showToast(res?.message || 'Username atau password salah!', 'error');
+            // Tampilkan peringatan inline DI DALAM form, bukan hanya toast
+            const msg = res?.message || 'Username atau password salah!';
+            setLoginError(msg);
+            showToast(msg, 'error');
           }
         } finally {
           setIsLoading(false);
@@ -1242,7 +1240,15 @@
             </button>
 
             <h3 className="font-black text-xl mb-4 text-center uppercase tracking-tight">Login Admin Toko</h3>
-            
+
+            {/* Peringatan error login yang jelas dan mencolok */}
+            {loginError && (
+              <div className="mb-4 px-3 py-2 bg-red-100 border-2 border-red-500 neo-shadow-sm flex items-center gap-2">
+                <span className="text-red-600 text-base font-black">⚠</span>
+                <span className="text-red-700 text-xs font-extrabold">{loginError}</span>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold uppercase mb-1">Username</label>
@@ -1250,8 +1256,8 @@
                   type="text"
                   required
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                  onChange={(e) => { setUsername(e.target.value); setLoginError(''); }}
+                  className={`w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow ${loginError ? 'border-red-500' : ''}`}
                 />
               </div>
 
@@ -1261,8 +1267,8 @@
                   type="password"
                   required
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
+                  onChange={(e) => { setPassword(e.target.value); setLoginError(''); }}
+                  className={`w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow ${loginError ? 'border-red-500' : ''}`}
                 />
               </div>
 
@@ -2498,51 +2504,13 @@
       );
     }
 
-    function AdminUlasanTab({ reviews, onUpdateReview, onDeleteReview }) {
-      const [modalOpen, setModalOpen] = useState(false);
-      const [editingId, setEditingId] = useState(null);
-      const [nama, setNama] = useState('');
-      const [wa, setWa] = useState('');
-      const [rating, setRating] = useState(5);
-      const [text, setText] = useState('');
-      const [isSaving, setIsSaving] = useState(false);
-
-      const handleOpenEdit = (r) => {
-        setEditingId(r.ID);
-        setNama(r.NAMA || '');
-        setWa(r.WHATSAPP || '');
-        setRating(Number(r.RATING) || 5);
-        setText(r.REVIEW || '');
-        setModalOpen(true);
-      };
-
-      const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!editingId || !nama.trim() || !text.trim()) return;
-
-        setIsSaving(true);
-        try {
-          const ok = await onUpdateReview({
-            ID: editingId,
-            NAMA: nama.trim(),
-            WHATSAPP: wa.trim(),
-            RATING: rating,
-            REVIEW: text.trim(),
-          });
-          if (ok !== false) {
-            setModalOpen(false);
-          }
-        } finally {
-          setIsSaving(false);
-        }
-      };
-
+    function AdminUlasanTab({ reviews, onDeleteReview }) {
       return (
         <div className="space-y-6">
           <div className="bg-white neo-border p-5 neo-shadow">
             <h3 className="font-extrabold text-lg text-black">Kelola & Moderasi Ulasan</h3>
             <p className="text-xs text-gray-600 font-medium mt-0.5">
-              Edit, hapus, atau tinjau ulasan pembeli toko Anda.
+              Tinjau dan hapus ulasan pembeli toko Anda.
             </p>
           </div>
 
@@ -2571,20 +2539,14 @@
                       <td className="p-3 whitespace-nowrap">
                         <div className="font-extrabold text-sm text-black">{r.NAMA}</div>
                         {r.WHATSAPP && (
-                          <div className="text-[10px] font-mono text-gray-500">+r.WHATSAPP</div>
+                          <div className="text-[10px] font-mono text-gray-500">{r.WHATSAPP}</div>
                         )}
                       </td>
                       <td className="p-3 whitespace-nowrap text-yellow-500 font-bold text-sm">
                         {'★'.repeat(Number(r.RATING) || 5)}
                       </td>
                       <td className="p-3 max-w-xs truncate text-gray-800 font-medium">{r.REVIEW}</td>
-                      <td className="p-3 text-center space-x-2 whitespace-nowrap">
-                        <button
-                          onClick={() => handleOpenEdit(r)}
-                          className="neo-border px-2.5 py-1 bg-yellow-300 font-bold hover:bg-yellow-400"
-                        >
-                          Edit
-                        </button>
+                      <td className="p-3 text-center whitespace-nowrap">
                         <button
                           onClick={() => onDeleteReview(r.ID)}
                           className="neo-border px-2.5 py-1 bg-red-400 text-white font-bold hover:bg-red-500"
@@ -2598,89 +2560,6 @@
               </tbody>
             </table>
           </div>
-
-          {modalOpen && (
-            <div className="fixed inset-0 z-[500] bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-              <div className="bg-white neo-border-3 neo-shadow-lg w-full max-w-md">
-                <div className="p-4 border-b-2 border-black flex items-center justify-between">
-                  <h3 className="font-extrabold text-lg text-black">Edit Ulasan Pembeli</h3>
-                  <button
-                    onClick={() => setModalOpen(false)}
-                    className="w-8 h-8 bg-black text-[#FFDD00] neo-border flex items-center justify-center font-bold"
-                  >
-                    ✕
-                  </button>
-                </div>
-
-                <form onSubmit={handleSubmit} className="p-6 space-y-4">
-                  <div>
-                    <label className="block text-xs font-bold uppercase mb-1 text-black">Nama Pembeli</label>
-                    <input
-                      type="text"
-                      required
-                      value={nama}
-                      onChange={(e) => setNama(e.target.value)}
-                      className="w-full neo-border px-3 py-2 text-sm bg-white font-bold outline-none focus:neo-shadow"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase mb-1 text-black">WhatsApp</label>
-                    <input
-                      type="text"
-                      value={wa}
-                      onChange={(e) => setWa(cleanWaInput(e.target.value))}
-                      className="w-full neo-border px-3 py-2 text-sm bg-white font-mono font-bold outline-none focus:neo-shadow"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase mb-1 text-black">Rating (1–5)</label>
-                    <div className="flex gap-2">
-                      {[1, 2, 3, 4, 5].map((starVal) => (
-                        <button
-                          key={starVal}
-                          type="button"
-                          onClick={() => setRating(starVal)}
-                          className="text-2xl hover:scale-125 transition-transform"
-                        >
-                          <span className={starVal <= rating ? 'text-[#FFDD00]' : 'text-gray-300'}>★</span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold uppercase mb-1 text-black">Teks Ulasan</label>
-                    <textarea
-                      rows={3}
-                      required
-                      value={text}
-                      onChange={(e) => setText(e.target.value)}
-                      className="w-full neo-border p-3 text-sm bg-white font-medium outline-none focus:neo-shadow resize-y"
-                    />
-                  </div>
-
-                  <div className="pt-3 border-t-2 border-black flex justify-end gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setModalOpen(false)}
-                      className="px-4 py-2 neo-border font-bold text-sm bg-white hover:bg-gray-100"
-                    >
-                      Batal
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSaving}
-                      className="px-4 py-2 neo-border font-extrabold text-sm bg-[#FFDD00] text-black neo-shadow-sm hover:neo-shadow"
-                    >
-                      {isSaving ? 'Menyimpan...' : 'Simpan Ulasan'}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
         </div>
       );
     }
@@ -2696,7 +2575,6 @@
       onDeleteSale,
       onSaveExpense,
       onDeleteExpense,
-      onUpdateReview,
       onDeleteReview,
       onShowReceipt,
     }) {
@@ -2769,7 +2647,6 @@
           {activeTab === 'ulasan' && (
             <AdminUlasanTab
               reviews={reviews}
-              onUpdateReview={onUpdateReview}
               onDeleteReview={onDeleteReview}
             />
           )}
@@ -3038,7 +2915,6 @@
                   onDeleteSale={handleDeleteSale}
                   onSaveExpense={handleSaveExpense}
                   onDeleteExpense={handleDeleteExpense}
-                  onUpdateReview={handleUpdateReview}
                   onDeleteReview={handleDeleteReview}
                   onShowReceipt={(s) => setReceiptSale(s)}
                 />
