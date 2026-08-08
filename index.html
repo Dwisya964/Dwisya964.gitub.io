@@ -181,100 +181,98 @@
       }
       return v;
     }
+  async function createReceiptPdf(sale) {
+  const JsPDF = window.jspdf && window.jspdf.jsPDF;
+  if (!JsPDF) {
+    throw new Error('Generator PDF belum siap. Silakan coba lagi.');
+  }
 
-    function createReceiptPdf(sale) {
-      const JsPDF = window.jspdf && window.jspdf.jsPDF;
-      if (!JsPDF) {
-        throw new Error('Generator PDF belum siap. Silakan coba lagi.');
-      }
+  // 1. Elemen struk HTML
+  const element = document.createElement('div');
+  element.style.width = '180px'; // Lebar area cetak fisik POS-58
+  element.style.padding = '0px';
+  element.style.margin = '0px';
+  element.style.boxSizing = 'border-box';
+  element.style.fontFamily = 'monospace, "Courier New", sans-serif';
+  element.style.fontSize = '11px';
+  element.style.color = '#000';
+  element.style.backgroundColor = '#fff';
+  element.style.lineHeight = '1.2';
 
-      const paperWidth = 58;
-      const margin = 4;
-      const contentWidth = paperWidth - margin * 2;
-      const measureDoc = new JsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: [paperWidth, 200],
-        compress: true,
-      });
-      const productText = String(sale.PRODUK || 'Tidak ada detail produk');
-      const productLines = measureDoc.splitTextToSize(productText, contentWidth);
-      const buyerLines = measureDoc.splitTextToSize(
-        `Pembeli: ${String(sale.NAMA_PEMBELI || 'Pelanggan Umum')}`,
-        contentWidth
-      );
-      const calculatedHeight = Math.max(
-        110,
-        54 + (productLines.length + buyerLines.length) * 4.2
-      );
+  element.innerHTML = `
+    <div style="text-align: center; font-weight: bold; font-size: 13px;">Dwisyafitriproject</div>
+    <div style="text-align: center; font-size: 9px; margin-bottom: 4px;">STRUK PEMBAYARAN KASIR</div>
+    <div style="border-top: 1px dashed #000; margin: 3px 0;"></div>
+    
+    <div style="display: flex; justify-content: space-between;">
+      <span>No Trx:</span>
+      <span style="font-weight: bold;">${sale.NO_TRANSAKSI || sale.ID || '-'}</span>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+      <span>Tanggal:</span>
+      <span>${fmtDate(sale.TANGGAL, true)}</span>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+      <span>Pembeli:</span>
+      <span style="font-weight: bold;">${sale.NAMA_PEMBELI || 'Pelanggan Umum'}</span>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+      <span>Metode:</span>
+      <span style="font-weight: bold;">${String(sale.METODE || '-').toUpperCase()}</span>
+    </div>
+    
+    <div style="border-top: 1px dashed #000; margin: 3px 0;"></div>
+    <div style="font-weight: bold; font-size: 10px; margin-bottom: 2px;">DETAIL PESANAN:</div>
+    <div style="font-weight: bold; word-break: break-word; font-size: 11px;">${sale.PRODUK || 'Tidak ada detail produk'}</div>
+    
+    <div style="border-top: 1px dashed #000; margin: 3px 0;"></div>
+    <div style="display: flex; justify-content: space-between;">
+      <span>Total Tagihan:</span>
+      <span style="font-weight: bold;">${rp(sale.HARGA)}</span>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+      <span>Bayar:</span>
+      <span>${rp(sale.BAYAR)}</span>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 12px; margin-top: 1px;">
+      <span>Kembalian:</span>
+      <span>${rp(sale.KEMBALIAN)}</span>
+    </div>
+    
+    <div style="border-top: 1px dashed #000; margin: 4px 0 3px 0;"></div>
+    <div style="text-align: center; font-size: 9px;">
+      Terima kasih telah berbelanja di Dwisyafitriproject!
+    </div>
+  `;
 
-      const doc = new JsPDF({
-        orientation: 'portrait',
-        unit: 'mm',
-        format: [paperWidth, calculatedHeight],
-        compress: true,
-      });
-      let y = 8;
-      const lineHeight = 4.2;
+  element.style.position = 'absolute';
+  element.style.left = '-9999px';
+  document.body.appendChild(element);
 
-      const center = (text, size, bold = false) => {
-        doc.setFont('helvetica', bold ? 'bold' : 'normal');
-        doc.setFontSize(size);
-        doc.text(String(text), paperWidth / 2, y, { align: 'center' });
-        y += size <= 9 ? 4 : 5;
-      };
-      const rule = () => {
-        doc.setDrawColor(0);
-        doc.line(margin, y, paperWidth - margin, y);
-        y += 4;
-      };
-      const wrapped = (text, size = 9, bold = false, align = 'left') => {
-        doc.setFont('helvetica', bold ? 'bold' : 'normal');
-        doc.setFontSize(size);
-        const lines = doc.splitTextToSize(String(text), contentWidth);
-        doc.text(lines, align === 'center' ? paperWidth / 2 : margin, y, {
-          align,
-          lineHeightFactor: 1.15,
-        });
-        y += Math.max(1, lines.length) * lineHeight;
-      };
-      const row = (label, value, bold = false) => {
-        doc.setFont('helvetica', bold ? 'bold' : 'normal');
-        doc.setFontSize(8.5);
-        doc.text(String(label), margin, y);
-        doc.text(String(value), paperWidth - margin, y, { align: 'right' });
-        y += lineHeight;
-      };
+  const canvas = await html2canvas(element, { scale: 3 });
+  document.body.removeChild(element);
 
-      center('Dwisyafitriproject', 14, true);
-      center('STRUK PEMBAYARAN KASIR', 8, true);
-      y += 1;
-      rule();
-      row('No Trx:', sale.NO_TRANSAKSI || sale.ID || '-');
-      row('Tanggal:', fmtDate(sale.TANGGAL, true));
-      wrapped(`Pembeli: ${sale.NAMA_PEMBELI || 'Pelanggan Umum'}`, 8.5, true);
-      row('Metode:', String(sale.METODE || '-').toUpperCase(), true);
-      y += 1;
-      rule();
-      wrapped('DETAIL PESANAN', 8, true);
-      wrapped(productText, 9, true);
-      y += 1;
-      rule();
-      row('Total Tagihan:', rp(sale.HARGA), true);
-      row('Bayar:', rp(sale.BAYAR));
-      row('Kembalian:', rp(sale.KEMBALIAN), true);
-      y += 4;
-      wrapped('Terima kasih telah berbelanja di Dwisyafitriproject!', 8, true, 'center');
+  const imgData = canvas.toDataURL('image/png');
+  const paperWidth = 48; // Lebar cetak efektif
+  const calculatedHeight = (canvas.height * paperWidth) / canvas.width;
 
-      const filename = `struk-${sale.NO_TRANSAKSI || sale.ID || 'transaksi'}.pdf`
-        .replace(/[^a-zA-Z0-9._-]/g, '-');
-      return {
-        blob: doc.output('blob'),
-        dataUri: doc.output('datauristring'),
-        filename,
-      };
-    }
+  // Ukuran PDF dibuat persis sebesar tinggi struk (tidak akan ada space kosong)
+  const doc = new JsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: [paperWidth, calculatedHeight]
+  });
 
+  doc.addImage(imgData, 'PNG', 0, 0, paperWidth, calculatedHeight);
+
+  const filename = `struk-${sale.NO_TRANSAKSI || sale.ID || 'transaksi'}.pdf`.replace(/[^a-zA-Z0-9._-]/g, '-');
+
+  return {
+    blob: doc.output('blob'),
+    dataUri: doc.output('datauristring'),
+    filename,
+  };
+}
     function downloadReceiptPdf(pdf) {
       const url = URL.createObjectURL(pdf.blob);
       const link = document.createElement('a');
