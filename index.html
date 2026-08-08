@@ -53,6 +53,7 @@
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   <style>
     body { font-family: 'Inter', sans-serif; background-color: #EFF6FF; color: #1E3A5F; margin:0;padding:0;-webkit-font-smoothing:antialiased; }
@@ -88,12 +89,29 @@
     .bg-\[\#00E5A0\] { background-color: #10B981 !important; }
     .bg-\[\#25D366\] { background-color: #25D366 !important; }
     @media print {
-      @page { size: 58mm auto; margin: 0; }
+      @page { size: 58mm auto; margin: 0mm; }
+      html, body { margin: 0 !important; padding: 0 !important; }
       body * { visibility: hidden; }
       #print-receipt-container, #print-receipt-container * { visibility: visible; }
-      #print-receipt-container { position: absolute; left: 0; top: 0; width: 58mm; max-width: 58mm; padding: 3mm; box-sizing: border-box; font-size: 10px; overflow: visible; }
+      #print-receipt-container {
+        position: fixed !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 58mm !important;
+        max-width: 58mm !important;
+        margin: 0 !important;
+        padding: 2mm 3mm !important;
+        box-sizing: border-box !important;
+        font-size: 10px !important;
+        overflow: visible !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+        display: block !important;
+      }
+      /* Sembunyikan semua tombol & elemen UI saat cetak */
+      #print-receipt-container ~ * { display: none !important; visibility: hidden !important; }
     }
-    .receipt-paper { width: 58mm; max-width: 100%; margin: 0 auto; padding: 4mm; box-sizing: border-box; background: #fff; color: #000; }
+    .receipt-paper { width: 58mm; max-width: 100%; margin: 0 auto; padding: 3mm 4mm; box-sizing: border-box; background: #fff; color: #000; }
     .variant-10 {
       background-color: #F7FEE7 !important;
       color: #1A2E05 !important;
@@ -186,86 +204,99 @@
   if (!JsPDF) {
     throw new Error('Generator PDF belum siap. Silakan coba lagi.');
   }
+  if (typeof html2canvas === 'undefined') {
+    throw new Error('html2canvas belum siap. Silakan coba lagi dalam beberapa detik.');
+  }
 
-  // 1. Elemen struk HTML
+  // Buat elemen struk tersembunyi untuk di-render ke canvas
   const element = document.createElement('div');
-  element.style.width = '180px'; // Lebar area cetak fisik POS-58
-  element.style.padding = '0px';
-  element.style.margin = '0px';
-  element.style.boxSizing = 'border-box';
-  element.style.fontFamily = 'monospace, "Courier New", sans-serif';
-  element.style.fontSize = '11px';
-  element.style.color = '#000';
-  element.style.backgroundColor = '#fff';
-  element.style.lineHeight = '1.2';
+  element.style.cssText = [
+    'width:216px',           // ~58mm pada 96dpi — cukup untuk thermal 58mm
+    'padding:6px 7px 8px 7px',
+    'margin:0',
+    'box-sizing:border-box',
+    'font-family:\'Courier New\',Courier,monospace',
+    'font-size:11px',
+    'color:#000',
+    'background:#fff',
+    'line-height:1.35',
+  ].join(';');
+
+  const esc = (s) => String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
   element.innerHTML = `
-    <div style="text-align: center; font-weight: bold; font-size: 13px;">Dwisyafitriproject</div>
-    <div style="text-align: center; font-size: 9px; margin-bottom: 4px;">STRUK PEMBAYARAN KASIR</div>
-    <div style="border-top: 1px dashed #000; margin: 3px 0;"></div>
-    
-    <div style="display: flex; justify-content: space-between;">
+    <div style="text-align:center;font-weight:bold;font-size:13px;">DWISYAFITRIPROJECT</div>
+    <div style="text-align:center;font-size:9px;margin-bottom:3px;">STRUK PEMBAYARAN KASIR</div>
+    <div style="border-top:1px dashed #000;margin:3px 0;"></div>
+    <div style="display:flex;justify-content:space-between;gap:4px;margin:1px 0;">
       <span>No Trx:</span>
-      <span style="font-weight: bold;">${sale.NO_TRANSAKSI || sale.ID || '-'}</span>
+      <span style="font-weight:bold;text-align:right;word-break:break-all;">${esc(sale.NO_TRANSAKSI || sale.ID || '-')}</span>
     </div>
-    <div style="display: flex; justify-content: space-between;">
+    <div style="display:flex;justify-content:space-between;gap:4px;margin:1px 0;">
       <span>Tanggal:</span>
-      <span>${fmtDate(sale.TANGGAL, true)}</span>
+      <span style="text-align:right;">${fmtDate(sale.TANGGAL, true)}</span>
     </div>
-    <div style="display: flex; justify-content: space-between;">
+    <div style="display:flex;justify-content:space-between;gap:4px;margin:1px 0;">
       <span>Pembeli:</span>
-      <span style="font-weight: bold;">${sale.NAMA_PEMBELI || 'Pelanggan Umum'}</span>
+      <span style="font-weight:bold;text-align:right;">${esc(sale.NAMA_PEMBELI || 'Pelanggan Umum')}</span>
     </div>
-    <div style="display: flex; justify-content: space-between;">
+    <div style="display:flex;justify-content:space-between;gap:4px;margin:1px 0;">
       <span>Metode:</span>
-      <span style="font-weight: bold;">${String(sale.METODE || '-').toUpperCase()}</span>
+      <span style="font-weight:bold;text-align:right;">${esc(String(sale.METODE || '-').toUpperCase())}</span>
     </div>
-    
-    <div style="border-top: 1px dashed #000; margin: 3px 0;"></div>
-    <div style="font-weight: bold; font-size: 10px; margin-bottom: 2px;">DETAIL PESANAN:</div>
-    <div style="font-weight: bold; word-break: break-word; font-size: 11px;">${sale.PRODUK || 'Tidak ada detail produk'}</div>
-    
-    <div style="border-top: 1px dashed #000; margin: 3px 0;"></div>
-    <div style="display: flex; justify-content: space-between;">
+    <div style="border-top:1px dashed #000;margin:3px 0;"></div>
+    <div style="font-weight:bold;font-size:9px;margin-bottom:2px;">DETAIL PESANAN:</div>
+    <div style="font-weight:bold;word-break:break-word;font-size:10px;margin-bottom:1px;">${esc(sale.PRODUK || 'Tidak ada detail produk')}</div>
+    <div style="border-top:1px dashed #000;margin:3px 0;"></div>
+    <div style="display:flex;justify-content:space-between;gap:4px;margin:1px 0;">
       <span>Total Tagihan:</span>
-      <span style="font-weight: bold;">${rp(sale.HARGA)}</span>
+      <span style="font-weight:bold;">${rp(sale.HARGA)}</span>
     </div>
-    <div style="display: flex; justify-content: space-between;">
+    <div style="display:flex;justify-content:space-between;gap:4px;margin:1px 0;">
       <span>Bayar:</span>
       <span>${rp(sale.BAYAR)}</span>
     </div>
-    <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 12px; margin-top: 1px;">
+    <div style="display:flex;justify-content:space-between;gap:4px;margin:1px 0;font-weight:bold;font-size:11px;">
       <span>Kembalian:</span>
       <span>${rp(sale.KEMBALIAN)}</span>
     </div>
-    
-    <div style="border-top: 1px dashed #000; margin: 4px 0 3px 0;"></div>
-    <div style="text-align: center; font-size: 9px;">
-      Terima kasih telah berbelanja di Dwisyafitriproject!
-    </div>
+    <div style="border-top:1px dashed #000;margin:4px 0 3px 0;"></div>
+    <div style="text-align:center;font-size:9px;">Terima kasih telah berbelanja di<br>Dwisyafitriproject!</div>
   `;
 
-  element.style.position = 'absolute';
+  // Tempatkan di luar layar agar tidak mempengaruhi tampilan
+  element.style.position = 'fixed';
   element.style.left = '-9999px';
+  element.style.top = '0';
   document.body.appendChild(element);
 
-  const canvas = await html2canvas(element, { scale: 3 });
-  document.body.removeChild(element);
+  let canvas;
+  try {
+    canvas = await html2canvas(element, {
+      scale: 3,
+      useCORS: true,
+      backgroundColor: '#ffffff',
+      logging: false,
+    });
+  } finally {
+    document.body.removeChild(element);
+  }
 
   const imgData = canvas.toDataURL('image/png');
-  const paperWidth = 48; // Lebar cetak efektif
-  const calculatedHeight = (canvas.height * paperWidth) / canvas.width;
+  // Lebar PDF = 48mm (efektif di dalam margin 58mm)
+  const paperWidth = 48;
+  const calculatedHeight = Math.ceil((canvas.height * paperWidth) / canvas.width);
 
-  // Ukuran PDF dibuat persis sebesar tinggi struk (tidak akan ada space kosong)
   const doc = new JsPDF({
     orientation: 'portrait',
     unit: 'mm',
-    format: [paperWidth, calculatedHeight]
+    format: [paperWidth, calculatedHeight],
   });
 
   doc.addImage(imgData, 'PNG', 0, 0, paperWidth, calculatedHeight);
 
-  const filename = `struk-${sale.NO_TRANSAKSI || sale.ID || 'transaksi'}.pdf`.replace(/[^a-zA-Z0-9._-]/g, '-');
+  const filename = `struk-${sale.NO_TRANSAKSI || sale.ID || 'transaksi'}.pdf`
+    .replace(/[^a-zA-Z0-9._-]/g, '-');
 
   return {
     blob: doc.output('blob'),
@@ -530,14 +561,167 @@
       if (!isOpen || !sale) return null;
 
       const handlePrint = () => {
-        window.print();
+        // Buat popup window khusus cetak — menghindari kertas blank & konten terpotong
+        const printWin = window.open('', '_blank', 'width=400,height=600');
+        if (!printWin) {
+          alert('Mohon izinkan pop-up browser untuk mencetak struk.');
+          return;
+        }
+        const produkHtml = (sale.PRODUK || 'Tidak ada detail produk')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const noTrx = (sale.NO_TRANSAKSI || sale.ID || '-')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const tglText = fmtDate(sale.TANGGAL, true);
+        const pembeli = (sale.NAMA_PEMBELI || 'Pelanggan Umum')
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const metode = (String(sale.METODE || '-').toUpperCase())
+          .replace(/&/g, '&amp;');
+
+        printWin.document.write(`<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Struk</title>
+<style>
+  /*
+   * Printer thermal 58mm memiliki area CETAK EFEKTIF ~48mm.
+   * Margin fisik kiri+kanan ~5mm per sisi tidak bisa dicetak.
+   * Solusi: gunakan lebar konten 46mm dengan margin auto,
+   * pakai tabel fixed-layout agar kolom tidak melampaui batas,
+   * dan font kecil agar teks muat dalam 1 baris.
+   */
+  @page {
+    size: 58mm auto;
+    margin: 0mm;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 58mm;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+  }
+  body {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 8.5px;
+    color: #000;
+    line-height: 1.4;
+  }
+  /* Area cetak aman: 46mm, di-center dalam 58mm */
+  .wrap {
+    width: 46mm;
+    margin: 0 auto;
+    padding: 2mm 0 3mm 0;
+  }
+  .title {
+    font-size: 11px;
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 0.5px;
+  }
+  .subtitle {
+    font-size: 8px;
+    text-align: center;
+    margin-bottom: 2px;
+    letter-spacing: 0.3px;
+  }
+  .divider {
+    border: none;
+    border-top: 1px dashed #000;
+    margin: 2px 0;
+  }
+  /* Tabel 2 kolom: label 40% | nilai 60% — teks tidak overflow */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  td {
+    padding: 1px 0;
+    vertical-align: top;
+    font-size: 8.5px;
+    word-break: break-word;
+  }
+  td.lbl {
+    width: 40%;
+    color: #333;
+  }
+  td.val {
+    width: 60%;
+    text-align: right;
+    font-weight: bold;
+  }
+  .section-lbl {
+    font-size: 8px;
+    font-weight: bold;
+    margin: 2px 0 1px 0;
+    text-transform: uppercase;
+  }
+  .produk {
+    font-weight: bold;
+    font-size: 9px;
+    word-break: break-word;
+    margin-bottom: 1px;
+  }
+  .total-val {
+    font-size: 10px;
+    font-weight: bold;
+  }
+  .footer {
+    font-size: 8px;
+    text-align: center;
+    margin-top: 3px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="title">DWISYAFITRIPROJECT</div>
+  <div class="subtitle">STRUK PEMBAYARAN KASIR</div>
+  <hr class="divider">
+  <table>
+    <tr><td class="lbl">No Trx</td><td class="val">${noTrx}</td></tr>
+    <tr><td class="lbl">Tanggal</td><td class="val">${tglText}</td></tr>
+    <tr><td class="lbl">Pembeli</td><td class="val">${pembeli}</td></tr>
+    <tr><td class="lbl">Metode</td><td class="val">${metode}</td></tr>
+  </table>
+  <hr class="divider">
+  <div class="section-lbl">Detail Pesanan:</div>
+  <div class="produk">${produkHtml}</div>
+  <hr class="divider">
+  <table>
+    <tr><td class="lbl">Total Tagihan</td><td class="val">${rp(sale.HARGA)}</td></tr>
+    <tr><td class="lbl">Bayar</td><td class="val">${rp(sale.BAYAR)}</td></tr>
+    <tr><td class="lbl">Kembalian</td><td class="val total-val">${rp(sale.KEMBALIAN)}</td></tr>
+  </table>
+  <hr class="divider">
+  <div class="footer">Terima kasih telah berbelanja di<br>Dwisyafitriproject!</div>
+</div>
+</body>
+</html>`);
+        printWin.document.close();
+        // Tunggu render selesai lalu print & tutup
+        printWin.onload = () => {
+          printWin.focus();
+          printWin.print();
+          setTimeout(() => printWin.close(), 800);
+        };
+        // Fallback jika onload tidak terpanggil (beberapa browser)
+        setTimeout(() => {
+          if (!printWin.closed) {
+            printWin.focus();
+            printWin.print();
+            setTimeout(() => printWin.close(), 800);
+          }
+        }, 600);
       };
 
-      const handleDownloadPdf = () => {
+      const handleDownloadPdf = async () => {
         setDownloadError('');
         setIsDownloading(true);
         try {
-          const pdf = createReceiptPdf(sale);
+          const pdf = await createReceiptPdf(sale);
           downloadReceiptPdf(pdf);
         } catch (err) {
           setDownloadError(err?.message || 'Gagal membuat PDF. Pastikan halaman sudah sepenuhnya dimuat.');
@@ -555,7 +739,7 @@
 
         setIsSharing(true);
         try {
-          const pdf = createReceiptPdf(sale);
+          const pdf = await createReceiptPdf(sale);
           const result = await gasCall('uploadReceiptPdfToDrive', {
             base64: pdf.dataUri,
             filename: pdf.filename,
